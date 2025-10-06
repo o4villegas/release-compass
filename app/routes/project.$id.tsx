@@ -87,9 +87,16 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
               {project.artist_name} · {project.release_type}
             </p>
           </div>
-          <div className="text-right">
-            <div className="text-sm text-muted-foreground mb-1">Release Date</div>
-            <div className="text-2xl font-semibold">{formatDate(project.release_date)}</div>
+          <div className="flex flex-col items-end gap-3">
+            <div className="text-right">
+              <div className="text-sm text-muted-foreground mb-1">Release Date</div>
+              <div className="text-2xl font-semibold">{formatDate(project.release_date)}</div>
+            </div>
+            <Button asChild>
+              <Link to={`/project/${project.id}/content`}>
+                View Content Library
+              </Link>
+            </Button>
           </div>
         </div>
 
@@ -186,8 +193,10 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
                       )}
                     </TableCell>
                     <TableCell>
-                      <Button variant="outline" size="sm" disabled>
-                        View Details
+                      <Button variant="outline" size="sm" asChild>
+                        <Link to={`/milestone/${milestone.id}`}>
+                          View Details
+                        </Link>
                       </Button>
                     </TableCell>
                   </TableRow>
