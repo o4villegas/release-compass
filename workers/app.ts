@@ -12,7 +12,8 @@ app.route("/api", contentRoutes);
 app.route("/api", milestonesRoutes);
 
 // React Router catch-all (must be last)
-app.get("*", (c) => {
+// Handle all HTTP methods for SSR and data fetching
+app.all("*", (c) => {
   const requestHandler = createRequestHandler(
     () => import("virtual:react-router/server-build"),
     import.meta.env.MODE,
