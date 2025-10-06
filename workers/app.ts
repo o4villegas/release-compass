@@ -1,10 +1,13 @@
 import { Hono } from "hono";
 import { createRequestHandler } from "react-router";
+import projectsRoutes from "./routes/projects";
 
 const app = new Hono();
 
-// Add more routes here
+// API routes
+app.route("/api", projectsRoutes);
 
+// React Router catch-all (must be last)
 app.get("*", (c) => {
   const requestHandler = createRequestHandler(
     () => import("virtual:react-router/server-build"),

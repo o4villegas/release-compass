@@ -4,13 +4,63 @@
   --font-sans:
     "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Dark Mode Base Colors */
+  --color-background: #0a0a0a;
+  --color-foreground: #ffffff;
+
+  /* Neon Green Primary - Success, Completed, Progress */
+  --color-primary: #00ff41;
+  --color-primary-foreground: #000000;
+
+  /* Neon Yellow Secondary - Warnings, Pending, Highlights */
+  --color-secondary: #ffd700;
+  --color-secondary-foreground: #000000;
+
+  /* Accent Colors */
+  --color-accent: #1a1a1a;
+  --color-accent-foreground: #ffffff;
+
+  /* Muted Colors */
+  --color-muted: #262626;
+  --color-muted-foreground: #a3a3a3;
+
+  /* Border & Card */
+  --color-border: #333333;
+  --color-card: #141414;
+  --color-card-foreground: #ffffff;
+
+  /* Destructive (Errors) */
+  --color-destructive: #ff0040;
+  --color-destructive-foreground: #ffffff;
+
+  /* Input */
+  --color-input: #333333;
+  --color-ring: #00ff41;
+
+  /* Radius */
+  --radius: 0.5rem;
 }
 
 html,
 body {
-  @apply bg-white dark:bg-gray-950;
+  @apply bg-background text-foreground;
+  color-scheme: dark;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+/* Neon glow effects for interactive elements */
+.btn-primary {
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}
+
+.btn-secondary {
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
 }

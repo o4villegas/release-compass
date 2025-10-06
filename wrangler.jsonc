@@ -13,34 +13,31 @@
     "enabled": true
   },
   /**
-   * Smart Placement
-   * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
+   * D1 Database Binding
+   * https://developers.cloudflare.com/d1/
    */
-  // "placement": { "mode": "smart" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "music_releases_db",
+      "database_id": "386fcd6c-d057-4057-8136-1fc1cc14a155"
+    }
+  ],
   /**
-   * Bindings
-   * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-   * databases, object storage, AI inference, real-time communication and more.
-   * https://developers.cloudflare.com/workers/runtime-apis/bindings/
+   * R2 Bucket Binding
+   * https://developers.cloudflare.com/r2/
    */
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "music-release-files"
+    }
+  ],
   /**
-   * Environment Variables
-   * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
+   * Note: R2 credentials are stored as secrets
+   * Set with: wrangler secret put R2_ACCESS_KEY_ID
+   *          wrangler secret put R2_SECRET_ACCESS_KEY
+   *          wrangler secret put R2_ACCOUNT_ID
    */
-  // "vars": { "MY_VARIABLE": "production_value" },
-  /**
-   * Note: Use secrets to store sensitive data.
-   * https://developers.cloudflare.com/workers/configuration/secrets/
-   */
-  /**
-   * Static Assets
-   * https://developers.cloudflare.com/workers/static-assets/binding/
-   */
-  // "assets": { "directory": "./public/", "binding": "ASSETS" },
-  /**
-   * Service Bindings (communicate between multiple Workers)
-   * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
-   */
-  // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
   "upload_source_maps": true
 }
