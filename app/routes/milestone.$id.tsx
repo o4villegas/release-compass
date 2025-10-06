@@ -78,6 +78,11 @@ export default function MilestoneDetail() {
             .map((r: QuotaRequirement) => `${r.content_type.replace('_', ' ')}: ${r.missing} more needed`)
             .join(', ');
           throw new Error(`Cannot complete milestone: ${unmetRequirements}`);
+        } else if (errorData.error === 'NOTES_NOT_ACKNOWLEDGED') {
+          throw new Error(`Cannot complete milestone: Master file has ${errorData.file_id ? 'unacknowledged' : ''} feedback notes that must be acknowledged first. Go to Production Files to review and acknowledge.`);
+        } else if (errorData.error === 'TEASER_REQUIREMENT_NOT_MET') {
+          const status = errorData.teaser_status;
+          throw new Error(`Cannot complete milestone: Need ${status.missing} more teaser post${status.missing > 1 ? 's' : ''} (${status.actual}/${status.required} posted)`);
         }
         throw new Error(errorData.message || 'Failed to complete milestone');
       }
@@ -107,7 +112,7 @@ export default function MilestoneDetail() {
         </Link>
         <div className="flex items-start justify-between mt-2">
           <div>
-            <h1 className="text-4xl font-bold">{milestone.title}</h1>
+            <h1 className="text-4xl font-bold">{milestone.name}</h1>
             <p className="text-muted-foreground mt-1">
               {project.artist_name} - {project.release_title}
             </p>

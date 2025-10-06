@@ -29,7 +29,7 @@ export function meta({ data }: Route.MetaArgs) {
 }
 
 export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
-  const { project, milestones, budget_summary } = loaderData;
+  const { project, milestones, budget_summary, cleared_for_release } = loaderData;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -92,11 +92,33 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
               <div className="text-sm text-muted-foreground mb-1">Release Date</div>
               <div className="text-2xl font-semibold">{formatDate(project.release_date)}</div>
             </div>
-            <Button asChild>
-              <Link to={`/project/${project.id}/content`}>
-                View Content Library
-              </Link>
-            </Button>
+            <div className="flex gap-2">
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/project/${project.id}/master`}>
+                  Master Upload
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/project/${project.id}/files`}>
+                  Production Files
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/project/${project.id}/budget`}>
+                  Budget
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link to={`/project/${project.id}/teasers`}>
+                  Teasers
+                </Link>
+              </Button>
+              <Button asChild size="sm">
+                <Link to={`/project/${project.id}/content`}>
+                  Content Library
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -131,21 +153,39 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-card">
+          <Card className={`border-2 ${cleared_for_release?.cleared ? 'border-green-500 bg-green-50' : 'border-yellow-500 bg-yellow-50'}`}>
             <CardHeader>
               <CardTitle>Cleared for Release</CardTitle>
               <CardDescription>Release readiness status</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2">
-                <Badge variant="outline" className="text-lg px-4 py-2">
-                  {project.cleared_for_release ? 'CLEARED' : 'NOT CLEARED'}
+              <div className="space-y-3">
+                <Badge
+                  variant={cleared_for_release?.cleared ? "default" : "outline"}
+                  className={`text-lg px-4 py-2 ${cleared_for_release?.cleared ? 'bg-green-600 text-white' : 'bg-yellow-600 text-white'}`}
+                >
+                  {cleared_for_release?.cleared ? '✓ CLEARED' : '✗ NOT CLEARED'}
                 </Badge>
-                <p className="text-sm text-muted-foreground mt-2">
-                  {project.cleared_for_release
-                    ? 'All requirements met'
-                    : 'Complete all blocking milestones'}
-                </p>
+
+                {cleared_for_release && !cleared_for_release.cleared && (
+                  <div className="space-y-2 mt-3">
+                    <p className="text-sm font-semibold text-gray-700">Missing Requirements:</p>
+                    <ul className="text-xs space-y-1">
+                      {cleared_for_release.reasons.slice(0, 3).map((reason, idx) => (
+                        <li key={idx} className="text-gray-600">• {reason}</li>
+                      ))}
+                      {cleared_for_release.reasons.length > 3 && (
+                        <li className="text-gray-500 italic">+ {cleared_for_release.reasons.length - 3} more...</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+
+                {cleared_for_release?.cleared && (
+                  <p className="text-sm text-green-700 font-medium">
+                    All requirements met - ready for distribution!
+                  </p>
+                )}
               </div>
             </CardContent>
           </Card>

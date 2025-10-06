@@ -90,6 +90,17 @@ export interface CreateProjectResponse {
   milestones: Milestone[];
 }
 
+export interface ClearedForReleaseResult {
+  cleared: boolean;
+  reasons: string[];
+  missing_requirements: {
+    milestones?: string[];
+    budget?: string[];
+    legal?: string[];
+    files?: string[];
+  };
+}
+
 export interface ProjectWithMilestones {
   project: Project;
   milestones: Milestone[];
@@ -97,4 +108,5 @@ export interface ProjectWithMilestones {
     total_spent: number;
     by_category: Record<string, number>;
   };
+  cleared_for_release?: ClearedForReleaseResult;
 }

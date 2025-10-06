@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { generateMilestonesForProject } from '../utils/milestoneTemplates';
+import { checkClearedForRelease } from '../utils/clearedForRelease';
 
 type Bindings = {
   DB: D1Database;
@@ -153,16 +154,47 @@ app.get('/projects/:id', async (c) => {
       totalSpent += item.total;
     }
 
+    // Check cleared-for-release status
+    const clearedForRelease = await checkClearedForRelease(c.env.DB, id);
+
     return c.json({
       project,
       milestones: milestones.results,
       budget_summary: {
         total_spent: totalSpent,
         by_category: budgetByCategory
-      }
+      },
+      cleared_for_release: clearedForRelease
     });
   } catch (error) {
     console.error('Error fetching project:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+/**
+ * GET /api/projects/:id/cleared-for-release
+ * Check if project is cleared for release
+ */
+app.get('/projects/:id/cleared-for-release', async (c) => {
+  try {
+    const { id } = c.req.param();
+
+    // Verify project exists
+    const project = await c.env.DB.prepare(`
+      SELECT id FROM projects WHERE id = ?
+    `).bind(id).first();
+
+    if (!project) {
+      return c.json({ error: 'Project not found' }, 404);
+    }
+
+    // Check cleared-for-release status
+    const result = await checkClearedForRelease(c.env.DB, id);
+
+    return c.json(result);
+  } catch (error) {
+    console.error('Error checking cleared-for-release:', error);
     return c.json({ error: 'Internal server error' }, 500);
   }
 });

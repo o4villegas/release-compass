@@ -27,12 +27,18 @@ test.describe('Production Deployment Smoke Tests', () => {
     await expect(page.getByLabel(/release date/i)).toBeVisible();
   });
 
-  test('API endpoints respond correctly', async ({ request }) => {
-    // Test a simple API endpoint - this will fail if no projects exist, but should not 404
-    const response = await request.get(`${BASE_URL}/api/projects`);
+  test('API health check responds correctly', async ({ request }) => {
+    // Test the health check endpoint
+    const response = await request.get(`${BASE_URL}/api/health`);
 
-    // Should not be 404
-    expect(response.status()).not.toBe(404);
+    // Should return 200 OK
+    expect(response.status()).toBe(200);
+
+    // Verify response structure
+    const data = await response.json();
+    expect(data).toHaveProperty('status', 'ok');
+    expect(data).toHaveProperty('timestamp');
+    expect(data).toHaveProperty('version');
   });
 
   test('no .data 404 errors on navigation', async ({ page }) => {

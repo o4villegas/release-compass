@@ -216,7 +216,7 @@ export default function ProjectContent() {
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="flex items-center gap-2">
-                        {milestone.title}
+                        {milestone.name}
                         <Badge
                           variant={milestone.status === 'complete' ? 'default' : 'secondary'}
                         >

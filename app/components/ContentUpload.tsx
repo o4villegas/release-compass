@@ -28,6 +28,7 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
   const [captionDraft, setCaptionDraft] = useState('');
   const [intendedPlatforms, setIntendedPlatforms] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [validationError, setValidationError] = useState('');
@@ -69,6 +70,7 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess('');
 
     if (!file || !contentType || !captureContext) {
       setError('Please fill in all required fields');
@@ -131,12 +133,18 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
       }
 
       // Show quota status if available
-      if (data.quota_status && !data.quota_status.quota_met) {
-        const unmetRequirements = data.quota_status.requirements
-          .filter((r: any) => !r.met)
-          .map((r: any) => `${r.content_type}: ${r.missing} more needed`)
-          .join(', ');
-        setError(`Upload successful! Still needed: ${unmetRequirements}`);
+      if (data.quota_status) {
+        if (data.quota_status.quota_met) {
+          setSuccess('✅ Upload successful! All content requirements met for this milestone.');
+        } else {
+          const unmetRequirements = data.quota_status.requirements
+            .filter((r: any) => !r.met)
+            .map((r: any) => `${r.content_type.replace('_', ' ')}: ${r.missing} more`)
+            .join(', ');
+          setSuccess(`✅ Upload successful! Still needed: ${unmetRequirements}`);
+        }
+      } else {
+        setSuccess('✅ Upload successful!');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -245,9 +253,16 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
             </div>
           )}
 
+          {/* Success Display */}
+          {success && (
+            <Alert className="border-green-600 bg-green-50 text-green-800">
+              {success}
+            </Alert>
+          )}
+
           {/* Error Display */}
           {error && (
-            <Alert className={error.includes('successful') ? 'border-primary' : 'border-destructive'}>
+            <Alert className="border-destructive text-destructive">
               {error}
             </Alert>
           )}
