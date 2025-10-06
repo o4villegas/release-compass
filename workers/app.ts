@@ -7,13 +7,15 @@ import milestonesRoutes from "./routes/milestones";
 const app = new Hono();
 
 // API routes
-app.route("/api", projectsRoutes);
-app.route("/api", contentRoutes);
-app.route("/api", milestonesRoutes);
+const api = new Hono();
+api.route("/", projectsRoutes);
+api.route("/", contentRoutes);
+api.route("/", milestonesRoutes);
+app.route("/api", api);
 
-// React Router catch-all (must be last)
-// Handle all HTTP methods for SSR and data fetching
-app.all("*", (c) => {
+// React Router handler for all non-API routes
+// Using notFound ensures API routes are tried first
+app.notFound((c) => {
   const requestHandler = createRequestHandler(
     () => import("virtual:react-router/server-build"),
     import.meta.env.MODE,
