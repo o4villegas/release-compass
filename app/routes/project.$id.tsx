@@ -7,19 +7,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import type { ProjectWithMilestones, Milestone } from "@/types";
 
-export async function loader({ params, request }: Route.LoaderArgs) {
-  // Use the request URL to build the API URL (works in both dev and production)
-  const url = new URL(request.url);
-  const apiUrl = `${url.origin}/api/projects/${params.id}`;
+export async function loader({ params, context }: Route.LoaderArgs) {
+  // Use direct DB access instead of HTTP fetch to avoid SSR issues
+  const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
 
-  const response = await fetch(apiUrl);
+  // Import handler function
+  const { getProjectDetails } = await import("../../workers/api-handlers/projects");
+  const data = await getProjectDetails(env.DB, params.id);
 
-  if (!response.ok) {
+  if (!data) {
     throw new Response("Project not found", { status: 404 });
   }
 
-  const data: ProjectWithMilestones = await response.json();
-  return data;
+  return data as ProjectWithMilestones;
 }
 
 export function meta({ data }: Route.MetaArgs) {

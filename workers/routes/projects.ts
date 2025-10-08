@@ -124,48 +124,15 @@ app.get('/projects/:id', async (c) => {
   try {
     const { id } = c.req.param();
 
-    // Fetch project
-    const project = await c.env.DB.prepare(`
-      SELECT * FROM projects WHERE id = ?
-    `).bind(id).first();
+    // Use extracted handler function
+    const { getProjectDetails } = await import('../api-handlers/projects');
+    const data = await getProjectDetails(c.env.DB, id);
 
-    if (!project) {
+    if (!data) {
       return c.json({ error: 'Project not found' }, 404);
     }
 
-    // Fetch milestones
-    const milestones = await c.env.DB.prepare(`
-      SELECT * FROM milestones WHERE project_id = ? ORDER BY due_date ASC
-    `).bind(id).all();
-
-    // Fetch budget summary
-    const budgetSummary = await c.env.DB.prepare(`
-      SELECT category, SUM(amount) as total
-      FROM budget_items
-      WHERE project_id = ?
-      GROUP BY category
-    `).bind(id).all();
-
-    const budgetByCategory: Record<string, number> = {};
-    let totalSpent = 0;
-    for (const row of budgetSummary.results) {
-      const item = row as { category: string; total: number };
-      budgetByCategory[item.category] = item.total;
-      totalSpent += item.total;
-    }
-
-    // Check cleared-for-release status
-    const clearedForRelease = await checkClearedForRelease(c.env.DB, id);
-
-    return c.json({
-      project,
-      milestones: milestones.results,
-      budget_summary: {
-        total_spent: totalSpent,
-        by_category: budgetByCategory
-      },
-      cleared_for_release: clearedForRelease
-    });
+    return c.json(data);
   } catch (error) {
     console.error('Error fetching project:', error);
     return c.json({ error: 'Internal server error' }, 500);
