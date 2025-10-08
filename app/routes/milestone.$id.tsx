@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from 'react-router';
+import type { Route } from "./+types/milestone.$id";
 import { useLoaderData, Link, useNavigate } from 'react-router';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
@@ -22,9 +22,7 @@ type QuotaStatus = {
   message: string;
 };
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
-  const { id } = params;
-
+export async function loader({ params, context }: Route.LoaderArgs) {
   // Use direct DB access instead of HTTP fetch to avoid SSR issues
   const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
 
@@ -32,7 +30,7 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   const { getMilestoneDetails } = await import("../../workers/api-handlers/milestones");
   const { getProjectDetails } = await import("../../workers/api-handlers/projects");
 
-  const milestoneData = await getMilestoneDetails(env.DB, id);
+  const milestoneData = await getMilestoneDetails(env.DB, params.id);
 
   if (!milestoneData) {
     throw new Response("Milestone not found", { status: 404 });
@@ -45,12 +43,12 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
     throw new Response("Project not found", { status: 404 });
   }
 
-  return json({
+  return {
     milestone: milestoneData.milestone,
     contentRequirements: milestoneData.content_requirements,
     quotaStatus: milestoneData.quota_status as QuotaStatus,
     project: projectData.project,
-  });
+  };
 }
 
 export default function MilestoneDetail() {

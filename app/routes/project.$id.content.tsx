@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from 'react-router';
+import type { Route } from "./+types/project.$id.content";
 import { useLoaderData, Link } from 'react-router';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import { Badge } from '~/components/ui/badge';
@@ -33,7 +33,7 @@ type QuotaRequirement = {
   met: boolean;
 };
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
+export async function loader({ params, request }: Route.LoaderArgs) {
   const { id } = params;
   const url = new URL(request.url);
   const apiUrl = `${url.origin}/api`;

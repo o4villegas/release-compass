@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from 'react-router';
+import type { Route } from "./+types/project.$id.master";
 import { useLoaderData, Link, useRevalidator } from 'react-router';
 import { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
@@ -43,7 +43,7 @@ interface Project {
   target_release_date: string;
 }
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
+export async function loader({ params, request }: Route.LoaderArgs) {
   const { id } = params;
   const url = new URL(request.url);
   const apiUrl = `${url.origin}/api`;

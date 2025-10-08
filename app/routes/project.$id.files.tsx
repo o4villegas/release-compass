@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from 'react-router';
+import type { Route } from "./+types/project.$id.files";
 import { useLoaderData, Link } from 'react-router';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
@@ -38,7 +38,7 @@ const FILE_TYPE_LABELS: Record<FileType, string> = {
   receipts: 'Receipts',
 };
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
+export async function loader({ params, request }: Route.LoaderArgs) {
   const { id } = params;
   const url = new URL(request.url);
   const apiUrl = `${url.origin}/api`;

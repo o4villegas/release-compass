@@ -1,4 +1,4 @@
-import { json, type LoaderFunctionArgs } from 'react-router';
+import type { Route } from "./+types/project.$id.budget";
 import { useLoaderData, Link, useRevalidator } from 'react-router';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
@@ -56,9 +56,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   'critical': 'bg-red-500',
 };
 
-export async function loader({ params, context }: LoaderFunctionArgs) {
-  const { id } = params;
-
+export async function loader({ params, context }: Route.LoaderArgs) {
   // Use direct DB access instead of HTTP fetch to avoid SSR issues
   const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
 
@@ -66,27 +64,27 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
   const { getProjectDetails } = await import("../../workers/api-handlers/projects");
   const { getProjectBudget, getBudgetAlerts } = await import("../../workers/api-handlers/budget");
 
-  const projectData = await getProjectDetails(env.DB, id);
+  const projectData = await getProjectDetails(env.DB, params.id);
   if (!projectData) {
     throw new Response("Project not found", { status: 404 });
   }
 
-  const budgetData = await getProjectBudget(env.DB, id);
+  const budgetData = await getProjectBudget(env.DB, params.id);
   if (!budgetData) {
     throw new Response("Budget not found", { status: 404 });
   }
 
-  const alertsData = await getBudgetAlerts(env.DB, id);
+  const alertsData = await getBudgetAlerts(env.DB, params.id);
   if (!alertsData) {
     throw new Response("Budget alerts not found", { status: 404 });
   }
 
-  return json({
+  return {
     project: projectData.project,
     budget: budgetData,
     alerts: alertsData.alerts as BudgetAlert[],
     hasAlerts: alertsData.has_critical || alertsData.has_warnings,
-  });
+  };
 }
 
 export default function ProjectBudget() {
