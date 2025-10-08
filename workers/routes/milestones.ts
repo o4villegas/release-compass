@@ -125,29 +125,15 @@ app.get('/milestones/:id', async (c) => {
   try {
     const { id } = c.req.param();
 
-    const milestone = await c.env.DB.prepare(`
-      SELECT * FROM milestones WHERE id = ?
-    `).bind(id).first();
+    // Use extracted handler function
+    const { getMilestoneDetails } = await import('../api-handlers/milestones');
+    const data = await getMilestoneDetails(c.env.DB, id);
 
-    if (!milestone) {
+    if (!data) {
       return c.json({ error: 'Milestone not found' }, 404);
     }
 
-    // Get content requirements
-    const requirements = await c.env.DB.prepare(`
-      SELECT content_type, minimum_count
-      FROM milestone_content_requirements
-      WHERE milestone_id = ?
-    `).bind(id).all();
-
-    // Get quota status
-    const quotaStatus = await getQuotaStatus(c.env.DB, id);
-
-    return c.json({
-      milestone,
-      content_requirements: requirements.results,
-      quota_status: quotaStatus,
-    });
+    return c.json(data);
   } catch (error) {
     console.error('Error fetching milestone:', error);
     return c.json({ error: 'Internal server error' }, 500);

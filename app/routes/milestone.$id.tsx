@@ -22,20 +22,28 @@ type QuotaStatus = {
   message: string;
 };
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const { id } = params;
-  const url = new URL(request.url);
-  const apiUrl = `${url.origin}/api`;
 
-  // Fetch milestone details with content requirements
-  const milestoneRes = await fetch(`${apiUrl}/milestones/${id}`);
-  if (!milestoneRes.ok) throw new Error('Failed to fetch milestone');
-  const milestoneData = await milestoneRes.json();
+  // Use direct DB access instead of HTTP fetch to avoid SSR issues
+  const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
+
+  // Import handler functions
+  const { getMilestoneDetails } = await import("../../workers/api-handlers/milestones");
+  const { getProjectDetails } = await import("../../workers/api-handlers/projects");
+
+  const milestoneData = await getMilestoneDetails(env.DB, id);
+
+  if (!milestoneData) {
+    throw new Response("Milestone not found", { status: 404 });
+  }
 
   // Fetch project details
-  const projectRes = await fetch(`${apiUrl}/projects/${milestoneData.milestone.project_id}`);
-  if (!projectRes.ok) throw new Error('Failed to fetch project');
-  const projectData = await projectRes.json();
+  const projectData = await getProjectDetails(env.DB, milestoneData.milestone.project_id as string);
+
+  if (!projectData) {
+    throw new Response("Project not found", { status: 404 });
+  }
 
   return json({
     milestone: milestoneData.milestone,

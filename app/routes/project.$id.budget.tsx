@@ -56,25 +56,30 @@ const CATEGORY_COLORS: Record<string, string> = {
   'critical': 'bg-red-500',
 };
 
-export async function loader({ params, request }: LoaderFunctionArgs) {
+export async function loader({ params, context }: LoaderFunctionArgs) {
   const { id } = params;
-  const url = new URL(request.url);
-  const apiUrl = `${url.origin}/api`;
 
-  // Fetch project details
-  const projectRes = await fetch(`${apiUrl}/projects/${id}`);
-  if (!projectRes.ok) throw new Error('Failed to fetch project');
-  const projectData = await projectRes.json();
+  // Use direct DB access instead of HTTP fetch to avoid SSR issues
+  const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
 
-  // Fetch budget summary
-  const budgetRes = await fetch(`${apiUrl}/projects/${id}/budget`);
-  if (!budgetRes.ok) throw new Error('Failed to fetch budget');
-  const budgetData = await budgetRes.json();
+  // Import handler functions
+  const { getProjectDetails } = await import("../../workers/api-handlers/projects");
+  const { getProjectBudget, getBudgetAlerts } = await import("../../workers/api-handlers/budget");
 
-  // Fetch budget alerts
-  const alertsRes = await fetch(`${apiUrl}/projects/${id}/budget/alerts`);
-  if (!alertsRes.ok) throw new Error('Failed to fetch alerts');
-  const alertsData = await alertsRes.json();
+  const projectData = await getProjectDetails(env.DB, id);
+  if (!projectData) {
+    throw new Response("Project not found", { status: 404 });
+  }
+
+  const budgetData = await getProjectBudget(env.DB, id);
+  if (!budgetData) {
+    throw new Response("Budget not found", { status: 404 });
+  }
+
+  const alertsData = await getBudgetAlerts(env.DB, id);
+  if (!alertsData) {
+    throw new Response("Budget alerts not found", { status: 404 });
+  }
 
   return json({
     project: projectData.project,
