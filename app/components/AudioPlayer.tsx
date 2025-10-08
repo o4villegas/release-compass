@@ -1,6 +1,4 @@
 import { useState, useEffect, useRef } from 'react';
-import Plyr from 'plyr-react';
-import 'plyr-react/plyr.css';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -37,11 +35,22 @@ export function AudioPlayer({
   const [showAddNote, setShowAddNote] = useState(false);
   const [newNoteText, setNewNoteText] = useState('');
   const [duration, setDuration] = useState(0);
+  const [isClient, setIsClient] = useState(false);
+  const [PlyrComponent, setPlyrComponent] = useState<any>(null);
   const playerRef = useRef<any>(null);
 
   const isUploader = userUuid === uploadedBy;
   const hasNotes = notes.length > 0;
   const canAcknowledge = isUploader && hasNotes && !notesAcknowledged;
+
+  // Load Plyr only on client side to avoid SSR issues
+  useEffect(() => {
+    setIsClient(true);
+    import('plyr-react').then((module) => {
+      setPlyrComponent(() => module.default);
+    });
+    import('plyr-react/plyr.css');
+  }, []);
 
   // Fetch notes on load
   useEffect(() => {
@@ -172,34 +181,40 @@ export function AudioPlayer({
       <CardContent className="space-y-6">
         {/* Audio Player */}
         <div className="relative">
-          <Plyr
-            ref={playerRef}
-            source={{
-              type: 'audio',
-              sources: [{ src: audioUrl }],
-            }}
-            options={{
-              controls: ['play', 'progress', 'current-time', 'duration', 'mute', 'volume'],
-            }}
-            onReady={handleReady}
-            onTimeUpdate={handleTimeUpdate}
-          />
+          {!isClient || !PlyrComponent ? (
+            <div className="p-4 text-center text-muted-foreground">Loading audio player...</div>
+          ) : (
+            <>
+              <PlyrComponent
+                ref={playerRef}
+                source={{
+                  type: 'audio',
+                  sources: [{ src: audioUrl }],
+                }}
+                options={{
+                  controls: ['play', 'progress', 'current-time', 'duration', 'mute', 'volume'],
+                }}
+                onReady={handleReady}
+                onTimeUpdate={handleTimeUpdate}
+              />
 
-          {/* Timeline note markers overlay */}
-          {duration > 0 && (
-            <div className="absolute top-7 left-0 right-0 h-1 pointer-events-none">
-              {notes.map((note) => (
-                <div
-                  key={note.id}
-                  className="absolute w-2 h-2 bg-red-500 rounded-full transform -translate-y-1/2 pointer-events-auto cursor-pointer hover:scale-150 transition-transform"
-                  style={{
-                    left: `${(note.timestamp_seconds / duration) * 100}%`,
-                  }}
-                  onClick={() => jumpToTimestamp(note.timestamp_seconds)}
-                  title={`${formatTimestamp(note.timestamp_seconds)}: ${note.note_text}`}
-                />
-              ))}
-            </div>
+              {/* Timeline note markers overlay */}
+              {duration > 0 && (
+                <div className="absolute top-7 left-0 right-0 h-1 pointer-events-none">
+                  {notes.map((note) => (
+                    <div
+                      key={note.id}
+                      className="absolute w-2 h-2 bg-red-500 rounded-full transform -translate-y-1/2 pointer-events-auto cursor-pointer hover:scale-150 transition-transform"
+                      style={{
+                        left: `${(note.timestamp_seconds / duration) * 100}%`,
+                      }}
+                      onClick={() => jumpToTimestamp(note.timestamp_seconds)}
+                      title={`${formatTimestamp(note.timestamp_seconds)}: ${note.note_text}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
 

@@ -60,11 +60,11 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     })
   );
 
-  return json({
+  return {
     project: projectData.project,
     milestones: milestonesWithQuota,
     contentItems: contentData.content_items as ContentItem[],
-  });
+  };
 }
 
 export default function ProjectContent() {

@@ -23,7 +23,7 @@ const api = new Hono();
 api.route("/", projectsRoutes);
 api.route("/", contentRoutes);
 api.route("/", milestonesRoutes);
-api.route("/files", filesRoutes);
+api.route("/", filesRoutes); // For /api/projects/:projectId/files and /api/files/:fileId routes
 api.route("/budget-items", budgetRoutes);
 api.route("/", budgetRoutes); // For /api/projects/:projectId/budget routes
 api.route("/teasers", teasersRoutes);

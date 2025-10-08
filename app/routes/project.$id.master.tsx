@@ -58,10 +58,10 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   if (!filesRes.ok) throw new Error('Failed to fetch files');
   const filesData = await filesRes.json();
 
-  return json({
+  return {
     project: projectData.project as Project,
     files: filesData.files as FileItem[],
-  });
+  };
 }
 
 export default function ProjectMaster() {

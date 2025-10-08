@@ -63,12 +63,12 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   if (!teasersRes.ok) throw new Error('Failed to fetch teasers');
   const teasersData = await teasersRes.json();
 
-  return json({
+  return {
     project: projectData.project,
     teasers: teasersData.teasers as TeaserPost[],
     requirement: teasersData.requirement as TeaserRequirement,
     optimalWindow: teasersData.optimal_posting_window as { start: string; end: string } | null,
-  });
+  };
 }
 
 export default function ProjectTeasers() {
