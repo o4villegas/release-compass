@@ -1,4 +1,5 @@
 import type { Route } from "./+types/project.$id.master";
+import type { D1Database, R2Bucket } from '@cloudflare/workers-types';
 import { useLoaderData, Link, useRevalidator } from 'react-router';
 import { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
@@ -44,20 +45,19 @@ interface Project {
   target_release_date: string;
 }
 
-export async function loader({ params, request }: Route.LoaderArgs) {
-  const { id } = params;
-  const url = new URL(request.url);
-  const apiUrl = `${url.origin}/api`;
+export async function loader({ params, context }: Route.LoaderArgs) {
+  // Use direct DB access instead of HTTP fetch to avoid SSR issues
+  const env = context.cloudflare as { env: { DB: D1Database; BUCKET: R2Bucket } };
 
-  // Fetch project details
-  const projectRes = await fetch(`${apiUrl}/projects/${id}`);
-  if (!projectRes.ok) throw new Error('Failed to fetch project');
-  const projectData = await projectRes.json() as { project: Project };
+  const { getProjectDetails } = await import("../../workers/api-handlers/projects");
+  const { getProjectFiles } = await import("../../workers/api-handlers/files");
 
-  // Fetch files for this project
-  const filesRes = await fetch(`${apiUrl}/projects/${id}/files`);
-  if (!filesRes.ok) throw new Error('Failed to fetch files');
-  const filesData = await filesRes.json() as { files: FileItem[] };
+  const projectData = await getProjectDetails(env.env.DB, params.id);
+  const filesData = await getProjectFiles(env.env.DB, params.id);
+
+  if (!projectData) {
+    throw new Response("Project not found", { status: 404 });
+  }
 
   return {
     project: projectData.project as Project,
