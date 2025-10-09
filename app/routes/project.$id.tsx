@@ -1,34 +1,45 @@
 import type { Route } from "./+types/project.$id";
-import { Link } from "react-router";
+import { Link, useNavigation } from "react-router";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { BackButton } from "~/components/BackButton";
+import { MilestoneGantt } from "~/components/MilestoneGantt";
+import { ContentQuotaWidget } from "~/components/widgets/ContentQuotaWidget";
+import { DashboardSkeleton } from "~/components/skeletons/DashboardSkeleton";
 import type { ProjectWithMilestones, Milestone } from "@/types";
 
-export async function loader({ params, context }: Route.LoaderArgs) {
+export async function loader({ params, context }: Route.LoaderArgs): Promise<ProjectWithMilestones> {
   // Use direct DB access instead of HTTP fetch to avoid SSR issues
-  const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
+  const env = context.cloudflare as { env: { DB: D1Database; BUCKET: R2Bucket } };
 
   // Import handler function
   const { getProjectDetails } = await import("../../workers/api-handlers/projects");
-  const data = await getProjectDetails(env.DB, params.id);
+  const data = await getProjectDetails(env.env.DB, params.id);
 
   if (!data) {
     throw new Response("Project not found", { status: 404 });
   }
 
-  return data as ProjectWithMilestones;
+  return data as unknown as ProjectWithMilestones;
 }
 
 export function meta({ data }: Route.MetaArgs) {
   return [
-    { title: `${data.project.release_title} - ${data.project.artist_name}` },
+    { title: `${data?.project.release_title} - ${data?.project.artist_name}` },
   ];
 }
 
 export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
+  const navigation = useNavigation();
+
+  // Show skeleton during navigation
+  if (navigation.state === "loading") {
+    return <DashboardSkeleton />;
+  }
+
   const { project, milestones, budget_summary, cleared_for_release } = loaderData;
 
   const formatDate = (dateString: string) => {
@@ -68,8 +79,8 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
   const progress = (completedMilestones / totalMilestones) * 100;
 
   const budgetUsed = budget_summary?.total_spent || 0;
-  const budgetRemaining = project.total_budget - budgetUsed;
-  const budgetProgress = (budgetUsed / project.total_budget) * 100;
+  const budgetRemaining = (project.total_budget || 0) - budgetUsed;
+  const budgetProgress = ((budgetUsed / (project.total_budget || 1)) * 100);
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -77,9 +88,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
-            <Link to="/" className="text-sm text-muted-foreground hover:text-primary mb-2 inline-block">
-              ← Back to Home
-            </Link>
+            <BackButton to="/" label="Back to Home" />
             <h1 className="text-4xl font-bold text-primary mb-2">
               {project.release_title}
             </h1>
@@ -90,7 +99,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
           <div className="flex flex-col items-end gap-3">
             <div className="text-right">
               <div className="text-sm text-muted-foreground mb-1">Release Date</div>
-              <div className="text-2xl font-semibold">{formatDate(project.release_date)}</div>
+              <div className="text-2xl font-semibold">{formatDate(project.release_date || '')}</div>
             </div>
             <div className="flex gap-2">
               <Button asChild variant="outline" size="sm">
@@ -123,7 +132,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Overview Cards */}
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-4 gap-6">
           <Card className="border-border bg-card">
             <CardHeader>
               <CardTitle>Project Progress</CardTitle>
@@ -144,7 +153,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <div className="text-2xl font-bold">{formatCurrency(project.total_budget)}</div>
+                <div className="text-2xl font-bold">{formatCurrency(project.total_budget || 0)}</div>
                 <Progress value={budgetProgress} className="h-3" />
                 <div className="text-sm text-muted-foreground">
                   {formatCurrency(budgetUsed)} spent · {formatCurrency(budgetRemaining)} remaining
@@ -189,62 +198,81 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
               </div>
             </CardContent>
           </Card>
+
+          {/* Content Quota Widget */}
+          <ContentQuotaWidget milestones={milestones} projectId={project.id} />
         </div>
 
-        {/* Milestones Table */}
-        <Card className="border-border bg-card">
-          <CardHeader>
-            <CardTitle>Milestones</CardTitle>
-            <CardDescription>
-              Track your release timeline and content requirements
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Milestone</TableHead>
-                  <TableHead>Due Date</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Blocks Release</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {milestones.map((milestone: Milestone) => (
-                  <TableRow key={milestone.id}>
-                    <TableCell className="font-medium">
-                      <div>
-                        <div>{milestone.name}</div>
-                        {milestone.description && (
-                          <div className="text-sm text-muted-foreground">{milestone.description}</div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>{formatDate(milestone.due_date)}</TableCell>
-                    <TableCell>{getMilestoneStatusBadge(milestone)}</TableCell>
-                    <TableCell>
-                      {milestone.blocks_release ? (
-                        <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive">
-                          Required
-                        </Badge>
-                      ) : (
-                        <span className="text-muted-foreground">—</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <Button variant="outline" size="sm" asChild>
-                        <Link to={`/milestone/${milestone.id}`}>
-                          View Details
-                        </Link>
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+        {/* Timeline Insights Panel */}
+        <Card className="border-l-4 border-l-primary">
+          <CardContent className="pt-6">
+            <div className="grid md:grid-cols-4 gap-6">
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">Critical Path</div>
+                <div className="text-2xl font-bold text-primary">
+                  {milestones.filter((m: Milestone) => m.blocks_release === 1 && m.status !== 'complete').length}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  Blocking milestones remaining
+                </div>
+              </div>
+
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">Time to Release</div>
+                <div className="text-2xl font-bold">
+                  {Math.ceil((new Date(project.release_date || '').getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {(() => {
+                    const overdueMilestones = milestones.filter((m: Milestone) => {
+                      const dueDate = new Date(m.due_date);
+                      const now = new Date();
+                      return dueDate < now && m.status !== 'complete';
+                    });
+                    return overdueMilestones.length === 0 ? '✓ On track' : `⚠ ${overdueMilestones.length} overdue`;
+                  })()}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">Next Deadline</div>
+                <div className="text-2xl font-bold text-yellow-500">
+                  {(() => {
+                    const nextMilestone = milestones
+                      .filter((m: Milestone) => m.status !== 'complete')
+                      .sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime())[0];
+                    return nextMilestone ? formatDate(nextMilestone.due_date) : 'None';
+                  })()}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {(() => {
+                    const nextMilestone = milestones
+                      .filter((m: Milestone) => m.status !== 'complete')
+                      .sort((a, b) => new Date(a.due_date).getTime() - new Date(b.due_date).getTime())[0];
+                    return nextMilestone ? nextMilestone.name : 'All complete';
+                  })()}
+                </div>
+              </div>
+
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">Overall Progress</div>
+                <div className="text-2xl font-bold text-primary">
+                  {Math.round(progress)}%
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {completedMilestones} of {totalMilestones} milestones
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
+
+        {/* Gantt Chart */}
+        <MilestoneGantt
+          milestones={milestones}
+          releaseDate={project.release_date || ''}
+          projectStartDate={project.created_at}
+        />
 
         {/* Quick Stats */}
         <div className="grid md:grid-cols-4 gap-4">
@@ -273,7 +301,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
           <Card className="border-border bg-card">
             <CardContent className="pt-6">
               <div className="text-2xl font-bold">
-                {Math.ceil((new Date(project.release_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
+                {Math.ceil((new Date(project.release_date || '').getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
               </div>
               <div className="text-sm text-muted-foreground">Days until release</div>
             </CardContent>

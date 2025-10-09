@@ -4,26 +4,26 @@
 import type { Route } from "./+types/test-error-handling";
 
 export async function loader({ context }: Route.LoaderArgs) {
-  const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
+  const env = context.cloudflare as { env: { DB: D1Database; BUCKET: R2Bucket } };
 
   // Test 1: Get valid project via direct call
   const { getProjectDetails } = await import("../../workers/api-handlers/projects");
 
   // Create a test project first
   const testProjectId = crypto.randomUUID();
-  await env.DB.prepare(`
+  await env.env.DB.prepare(`
     INSERT INTO projects (id, artist_name, release_title, release_date, release_type, total_budget, created_at, created_by)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(testProjectId, "Test Artist", "Test Album", "2026-01-01", "album", 50000, new Date().toISOString(), "test-user").run();
 
   // Test direct call with valid ID
-  const directResult = await getProjectDetails(env.DB, testProjectId);
+  const directResult = await getProjectDetails(env.env.DB, testProjectId);
 
   // Test direct call with invalid ID (should return null)
-  const directError = await getProjectDetails(env.DB, "invalid-id-12345");
+  const directError = await getProjectDetails(env.env.DB, "invalid-id-12345");
 
   // Clean up
-  await env.DB.prepare("DELETE FROM projects WHERE id = ?").bind(testProjectId).run();
+  await env.env.DB.prepare("DELETE FROM projects WHERE id = ?").bind(testProjectId).run();
 
   return {
     test1: {

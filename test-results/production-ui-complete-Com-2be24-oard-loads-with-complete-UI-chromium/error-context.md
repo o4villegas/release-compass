@@ -1,0 +1,217 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - link "← Back to Home" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - heading "Fix Test" [level=1] [ref=e7]
+      - paragraph [ref=e8]: Production Test · single
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: Release Date
+        - generic [ref=e12]: July 31, 2026
+      - generic [ref=e13]:
+        - link "Master Upload" [ref=e14] [cursor=pointer]:
+          - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b/master
+        - link "Production Files" [ref=e15] [cursor=pointer]:
+          - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b/files
+        - link "Budget" [ref=e16] [cursor=pointer]:
+          - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b/budget
+        - link "Teasers" [ref=e17] [cursor=pointer]:
+          - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b/teasers
+        - link "Content Library" [ref=e18] [cursor=pointer]:
+          - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b/content
+  - generic [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]: Project Progress
+        - generic [ref=e23]: 0 of 11 milestones complete
+      - generic [ref=e25]:
+        - progressbar [ref=e26]
+        - generic [ref=e28]: 0%
+    - generic [ref=e29]:
+      - generic [ref=e30]:
+        - generic [ref=e31]: Budget
+        - generic [ref=e32]: Total allocated budget
+      - generic [ref=e34]:
+        - generic [ref=e35]: $25,000
+        - progressbar [ref=e36]
+        - generic [ref=e38]: $0 spent · $25,000 remaining
+    - generic [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]: Cleared for Release
+        - generic [ref=e42]: Release readiness status
+      - generic [ref=e44]:
+        - generic [ref=e45]: ✗ NOT CLEARED
+        - generic [ref=e46]:
+          - paragraph [ref=e47]: "Missing Requirements:"
+          - list [ref=e48]:
+            - listitem [ref=e49]: "• 11 milestone(s) incomplete: Artwork Finalized, Marketing Campaign Launch, Mastering Complete, Metadata Tagging Complete, Mixing Complete, Pre-Save Campaign Active, Recording Complete, Release Day, Spotify Playlist Submission, Teaser Content Released, Upload to Distributor"
+            - listitem [ref=e50]: • Master audio file not uploaded
+            - listitem [ref=e51]: • Artwork file not uploaded
+            - listitem [ref=e52]: + 1 more...
+  - generic [ref=e53]:
+    - generic [ref=e54]:
+      - generic [ref=e55]: Milestones
+      - generic [ref=e56]: Track your release timeline and content requirements
+    - table [ref=e59]:
+      - rowgroup [ref=e60]:
+        - row "Milestone Due Date Status Blocks Release Actions" [ref=e61]:
+          - cell "Milestone" [ref=e62]
+          - cell "Due Date" [ref=e63]
+          - cell "Status" [ref=e64]
+          - cell "Blocks Release" [ref=e65]
+          - cell "Actions" [ref=e66]
+      - rowgroup [ref=e67]:
+        - row "Recording Complete All tracks recorded and ready for mixing May 2, 2026 Pending — View Details" [ref=e68]:
+          - cell "Recording Complete All tracks recorded and ready for mixing" [ref=e69]:
+            - generic [ref=e70]:
+              - generic [ref=e71]: Recording Complete
+              - generic [ref=e72]: All tracks recorded and ready for mixing
+          - cell "May 2, 2026" [ref=e73]
+          - cell "Pending" [ref=e74]:
+            - generic [ref=e75]: Pending
+          - cell "—" [ref=e76]
+          - cell "View Details" [ref=e77]:
+            - link "View Details" [ref=e78] [cursor=pointer]:
+              - /url: /milestone/a7143299-a5a6-4824-b1a7-f5bb8ae05b4f
+        - row "Mixing Complete All tracks mixed and ready for mastering June 1, 2026 Pending — View Details" [ref=e79]:
+          - cell "Mixing Complete All tracks mixed and ready for mastering" [ref=e80]:
+            - generic [ref=e81]:
+              - generic [ref=e82]: Mixing Complete
+              - generic [ref=e83]: All tracks mixed and ready for mastering
+          - cell "June 1, 2026" [ref=e84]
+          - cell "Pending" [ref=e85]:
+            - generic [ref=e86]: Pending
+          - cell "—" [ref=e87]
+          - cell "View Details" [ref=e88]:
+            - link "View Details" [ref=e89] [cursor=pointer]:
+              - /url: /milestone/7a405e37-6758-40a7-8864-36e130b4e50e
+        - row "Mastering Complete Final master approved and ready for distribution June 16, 2026 Pending — View Details" [ref=e90]:
+          - cell "Mastering Complete Final master approved and ready for distribution" [ref=e91]:
+            - generic [ref=e92]:
+              - generic [ref=e93]: Mastering Complete
+              - generic [ref=e94]: Final master approved and ready for distribution
+          - cell "June 16, 2026" [ref=e95]
+          - cell "Pending" [ref=e96]:
+            - generic [ref=e97]: Pending
+          - cell "—" [ref=e98]
+          - cell "View Details" [ref=e99]:
+            - link "View Details" [ref=e100] [cursor=pointer]:
+              - /url: /milestone/2b4888b8-8d4e-4fe7-be55-da8537e88159
+        - row "Metadata Tagging Complete All metadata (ISRC, UPC, credits) finalized June 26, 2026 Pending Required View Details" [ref=e101]:
+          - cell "Metadata Tagging Complete All metadata (ISRC, UPC, credits) finalized" [ref=e102]:
+            - generic [ref=e103]:
+              - generic [ref=e104]: Metadata Tagging Complete
+              - generic [ref=e105]: All metadata (ISRC, UPC, credits) finalized
+          - cell "June 26, 2026" [ref=e106]
+          - cell "Pending" [ref=e107]:
+            - generic [ref=e108]: Pending
+          - cell "Required" [ref=e109]:
+            - generic [ref=e110]: Required
+          - cell "View Details" [ref=e111]:
+            - link "View Details" [ref=e112] [cursor=pointer]:
+              - /url: /milestone/6a9b56a9-98c3-44b0-9bca-aa4693241d5b
+        - row "Artwork Finalized Album artwork approved and ready July 1, 2026 Pending — View Details" [ref=e113]:
+          - cell "Artwork Finalized Album artwork approved and ready" [ref=e114]:
+            - generic [ref=e115]:
+              - generic [ref=e116]: Artwork Finalized
+              - generic [ref=e117]: Album artwork approved and ready
+          - cell "July 1, 2026" [ref=e118]
+          - cell "Pending" [ref=e119]:
+            - generic [ref=e120]: Pending
+          - cell "—" [ref=e121]
+          - cell "View Details" [ref=e122]:
+            - link "View Details" [ref=e123] [cursor=pointer]:
+              - /url: /milestone/f75401fd-cb29-4c44-ba4d-9ef99071cbf3
+        - row "Upload to Distributor Release uploaded to distribution platform July 1, 2026 Pending Required View Details" [ref=e124]:
+          - cell "Upload to Distributor Release uploaded to distribution platform" [ref=e125]:
+            - generic [ref=e126]:
+              - generic [ref=e127]: Upload to Distributor
+              - generic [ref=e128]: Release uploaded to distribution platform
+          - cell "July 1, 2026" [ref=e129]
+          - cell "Pending" [ref=e130]:
+            - generic [ref=e131]: Pending
+          - cell "Required" [ref=e132]:
+            - generic [ref=e133]: Required
+          - cell "View Details" [ref=e134]:
+            - link "View Details" [ref=e135] [cursor=pointer]:
+              - /url: /milestone/a1e6552f-9eaf-4c3e-8529-25c71f8b34c2
+        - row "Spotify Playlist Submission Submitted for Spotify editorial consideration July 3, 2026 Pending Required View Details" [ref=e136]:
+          - cell "Spotify Playlist Submission Submitted for Spotify editorial consideration" [ref=e137]:
+            - generic [ref=e138]:
+              - generic [ref=e139]: Spotify Playlist Submission
+              - generic [ref=e140]: Submitted for Spotify editorial consideration
+          - cell "July 3, 2026" [ref=e141]
+          - cell "Pending" [ref=e142]:
+            - generic [ref=e143]: Pending
+          - cell "Required" [ref=e144]:
+            - generic [ref=e145]: Required
+          - cell "View Details" [ref=e146]:
+            - link "View Details" [ref=e147] [cursor=pointer]:
+              - /url: /milestone/30a5c527-0616-4ec7-9642-731bf93f7d63
+        - row "Teaser Content Released Minimum 2 teaser posts published July 7, 2026 Pending — View Details" [ref=e148]:
+          - cell "Teaser Content Released Minimum 2 teaser posts published" [ref=e149]:
+            - generic [ref=e150]:
+              - generic [ref=e151]: Teaser Content Released
+              - generic [ref=e152]: Minimum 2 teaser posts published
+          - cell "July 7, 2026" [ref=e153]
+          - cell "Pending" [ref=e154]:
+            - generic [ref=e155]: Pending
+          - cell "—" [ref=e156]
+          - cell "View Details" [ref=e157]:
+            - link "View Details" [ref=e158] [cursor=pointer]:
+              - /url: /milestone/90ec8c2f-be84-4cc6-9cbf-60262e2eeb27
+        - row "Marketing Campaign Launch Active marketing campaign running July 10, 2026 Pending — View Details" [ref=e159]:
+          - cell "Marketing Campaign Launch Active marketing campaign running" [ref=e160]:
+            - generic [ref=e161]:
+              - generic [ref=e162]: Marketing Campaign Launch
+              - generic [ref=e163]: Active marketing campaign running
+          - cell "July 10, 2026" [ref=e164]
+          - cell "Pending" [ref=e165]:
+            - generic [ref=e166]: Pending
+          - cell "—" [ref=e167]
+          - cell "View Details" [ref=e168]:
+            - link "View Details" [ref=e169] [cursor=pointer]:
+              - /url: /milestone/84e25cf4-2192-47be-aa6f-c33e6f8d8074
+        - row "Pre-Save Campaign Active Pre-save/pre-add links live and promoted July 10, 2026 Pending — View Details" [ref=e170]:
+          - cell "Pre-Save Campaign Active Pre-save/pre-add links live and promoted" [ref=e171]:
+            - generic [ref=e172]:
+              - generic [ref=e173]: Pre-Save Campaign Active
+              - generic [ref=e174]: Pre-save/pre-add links live and promoted
+          - cell "July 10, 2026" [ref=e175]
+          - cell "Pending" [ref=e176]:
+            - generic [ref=e177]: Pending
+          - cell "—" [ref=e178]
+          - cell "View Details" [ref=e179]:
+            - link "View Details" [ref=e180] [cursor=pointer]:
+              - /url: /milestone/81897cbc-83d7-4461-aa6e-e08cc660b7a5
+        - row "Release Day Music goes live on all platforms July 31, 2026 Pending Required View Details" [ref=e181]:
+          - cell "Release Day Music goes live on all platforms" [ref=e182]:
+            - generic [ref=e183]:
+              - generic [ref=e184]: Release Day
+              - generic [ref=e185]: Music goes live on all platforms
+          - cell "July 31, 2026" [ref=e186]
+          - cell "Pending" [ref=e187]:
+            - generic [ref=e188]: Pending
+          - cell "Required" [ref=e189]:
+            - generic [ref=e190]: Required
+          - cell "View Details" [ref=e191]:
+            - link "View Details" [ref=e192] [cursor=pointer]:
+              - /url: /milestone/6d4ffaf0-a7b5-473a-b2cc-b8055979e909
+  - generic [ref=e193]:
+    - generic [ref=e195]:
+      - generic [ref=e196]: "4"
+      - generic [ref=e197]: Blocking milestones remaining
+    - generic [ref=e199]:
+      - generic [ref=e200]: "0"
+      - generic [ref=e201]: Overdue milestones
+    - generic [ref=e203]:
+      - generic [ref=e204]: "297"
+      - generic [ref=e205]: Days until release
+    - generic [ref=e207]:
+      - generic [ref=e208]: "0"
+      - generic [ref=e209]: Budget categories used
+```

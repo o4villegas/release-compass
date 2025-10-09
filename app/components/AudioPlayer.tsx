@@ -60,10 +60,10 @@ export function AudioPlayer({
   const fetchNotes = async () => {
     try {
       const res = await fetch(`/api/files/${fileId}/notes`);
-      const data = await res.json();
+      const data = await res.json() as { notes?: Note[] };
       setNotes(data.notes || []);
     } catch (err) {
-      console.error('Error fetching notes:', err);
+      console.error('Error fetching notes:', err instanceof Error ? err.message : 'Unknown error');
     }
   };
 
@@ -126,7 +126,7 @@ export function AudioPlayer({
       });
 
       if (!response.ok) {
-        const error = await response.json();
+        const error = await response.json() as { error?: string };
         throw new Error(error.error || 'Failed to acknowledge notes');
       }
 

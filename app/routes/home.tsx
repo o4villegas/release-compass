@@ -68,7 +68,20 @@ export default function Home() {
           </Card>
         </div>
 
-        <div className="mt-8 text-center text-sm text-muted-foreground">
+        <div className="mt-8 text-center">
+          <Card className="border-border bg-card/50">
+            <CardContent className="pt-6">
+              <p className="text-sm text-muted-foreground mb-3">Demo Project</p>
+              <Link to="/project/b199c34c-6641-496a-9832-b962d9563a74">
+                <Button variant="outline" size="sm" className="w-full">
+                  View Demo: Test Album by Implementation Test
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="mt-4 text-center text-sm text-muted-foreground">
           <p>Built for artists, managers, and labels</p>
         </div>
       </div>

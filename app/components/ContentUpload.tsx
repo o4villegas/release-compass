@@ -115,11 +115,17 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
       setUploadProgress(100);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Upload failed');
       }
 
-      const data = await response.json();
+      const data = await response.json() as {
+        content?: { id: string };
+        quota_status?: {
+          quota_met: boolean;
+          requirements: Array<{ content_type: string; missing: number; met: boolean }>;
+        };
+      };
 
       // Reset form
       setFile(null);
@@ -138,8 +144,8 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
           setSuccess('✅ Upload successful! All content requirements met for this milestone.');
         } else {
           const unmetRequirements = data.quota_status.requirements
-            .filter((r: any) => !r.met)
-            .map((r: any) => `${r.content_type.replace('_', ' ')}: ${r.missing} more`)
+            .filter((r) => !r.met)
+            .map((r) => `${r.content_type.replace('_', ' ')}: ${r.missing} more`)
             .join(', ');
           setSuccess(`✅ Upload successful! Still needed: ${unmetRequirements}`);
         }

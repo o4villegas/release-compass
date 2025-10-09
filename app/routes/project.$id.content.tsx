@@ -5,7 +5,9 @@ import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Progress } from '~/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
+import { BackButton } from '~/components/BackButton';
 import { ContentUpload } from '~/components/ContentUpload';
+import { EmptyState } from '~/components/ui/empty-state';
 
 type ContentItem = {
   id: string;
@@ -41,12 +43,17 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   // Fetch project details
   const projectRes = await fetch(`${apiUrl}/projects/${id}`);
   if (!projectRes.ok) throw new Error('Failed to fetch project');
-  const projectData = await projectRes.json();
+  const projectData = await projectRes.json() as {
+    project: any;
+    milestones: Milestone[];
+  };
 
   // Fetch all content for this project
   const contentRes = await fetch(`${apiUrl}/projects/${id}/content`);
   if (!contentRes.ok) throw new Error('Failed to fetch content');
-  const contentData = await contentRes.json();
+  const contentData = await contentRes.json() as {
+    content_items: ContentItem[];
+  };
 
   // Fetch quota status for each milestone
   const milestonesWithQuota = await Promise.all(
@@ -88,9 +95,7 @@ export default function ProjectContent() {
     <div className="container mx-auto py-8 space-y-8">
       {/* Header */}
       <div>
-        <Link to={`/project/${project.id}`} className="text-sm text-muted-foreground hover:text-primary">
-          ← Back to Project
-        </Link>
+        <BackButton to={`/project/${project.id}`} label="Back to Project" />
         <h1 className="text-4xl font-bold mt-2">{project.release_title}</h1>
         <p className="text-muted-foreground">{project.artist_name}</p>
       </div>
@@ -159,9 +164,15 @@ export default function ProjectContent() {
             <CardContent>
               <div className="space-y-4">
                 {contentItems.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
-                    No content uploaded yet. Switch to the Upload tab to get started.
-                  </p>
+                  <EmptyState
+                    icon={<span className="text-5xl">📸</span>}
+                    title="No Content Yet"
+                    description="Start building your content library by uploading photos, videos, and audio from your creative sessions. Switch to the Upload tab to get started."
+                    action={{
+                      label: "Go to Upload Tab",
+                      to: `#upload`
+                    }}
+                  />
                 ) : (
                   contentItems.map((item) => (
                     <div

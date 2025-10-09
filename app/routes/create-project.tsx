@@ -77,11 +77,11 @@ export default function CreateProject() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Failed to create project');
       }
 
-      const data = await response.json();
+      const data = await response.json() as { project: { id: string } };
 
       // Navigate to project dashboard
       navigate(`/project/${data.project.id}`);

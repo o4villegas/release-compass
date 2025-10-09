@@ -10,7 +10,9 @@ import { Alert, AlertDescription } from '~/components/ui/alert';
 import { Badge } from '~/components/ui/badge';
 import { Progress } from '~/components/ui/progress';
 import { Checkbox } from '~/components/ui/checkbox';
-import { AlertCircle, CheckCircle, ArrowLeft, Calendar, ExternalLink } from 'lucide-react';
+import { BackButton } from '~/components/BackButton';
+import { EmptyState } from '~/components/ui/empty-state';
+import { AlertCircle, CheckCircle, Calendar, ExternalLink } from 'lucide-react';
 
 type Platform = 'TikTok' | 'Instagram' | 'YouTube' | 'Twitter' | 'Facebook';
 
@@ -56,12 +58,16 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   // Fetch project details
   const projectRes = await fetch(`${apiUrl}/projects/${id}`);
   if (!projectRes.ok) throw new Error('Failed to fetch project');
-  const projectData = await projectRes.json();
+  const projectData = await projectRes.json() as { project: any };
 
   // Fetch teasers for this project
   const teasersRes = await fetch(`${apiUrl}/projects/${id}/teasers`);
   if (!teasersRes.ok) throw new Error('Failed to fetch teasers');
-  const teasersData = await teasersRes.json();
+  const teasersData = await teasersRes.json() as {
+    teasers: TeaserPost[];
+    requirement: TeaserRequirement;
+    optimal_posting_window: { start: string; end: string } | null;
+  };
 
   return {
     project: projectData.project,
@@ -130,7 +136,10 @@ export default function ProjectTeasers() {
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json() as {
+        error?: string;
+        posting_window_warning?: string;
+      };
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to create teaser post');
@@ -173,7 +182,7 @@ export default function ProjectTeasers() {
       });
 
       if (!response.ok) {
-        const data = await response.json();
+        const data = await response.json() as { error?: string };
         throw new Error(data.error || 'Failed to update engagement');
       }
 
@@ -218,12 +227,7 @@ export default function ProjectTeasers() {
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="mb-6">
-        <Button asChild variant="ghost" size="sm">
-          <Link to={`/project/${project.id}`}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Project
-          </Link>
-        </Button>
+        <BackButton to={`/project/${project.id}`} label="Back to Project" />
       </div>
 
       <div className="mb-6">
@@ -419,9 +423,15 @@ export default function ProjectTeasers() {
           <CardContent>
             <div className="space-y-4">
               {teasers.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-8">
-                  No teasers posted yet. Add your first teaser to get started.
-                </p>
+                <EmptyState
+                  icon={<span className="text-5xl">🎬</span>}
+                  title="No Teasers Posted"
+                  description="Start building anticipation by posting teaser clips on social media. Teasers help engage your audience before the release."
+                  action={{
+                    label: "Add First Teaser",
+                    to: "#add-teaser-form"
+                  }}
+                />
               ) : (
                 teasers.map((teaser) => (
                   <div

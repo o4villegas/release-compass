@@ -5,12 +5,12 @@ import type { Route } from "./+types/test-import-handler";
 
 export async function loader({ context }: Route.LoaderArgs) {
   try {
-    const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
+    const env = context.cloudflare as { env: { DB: D1Database; BUCKET: R2Bucket } };
 
     // Test importing from workers/api-handlers/
     const { testHandler } = await import("../../workers/api-handlers/test-handler");
 
-    const result = await testHandler(env.DB);
+    const result = await testHandler(env.env.DB);
 
     return {
       success: true,

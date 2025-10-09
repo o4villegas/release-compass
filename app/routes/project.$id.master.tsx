@@ -11,6 +11,7 @@ import { Progress } from '~/components/ui/progress';
 import { AudioPlayer } from '~/components/AudioPlayer';
 import { Badge } from '~/components/ui/badge';
 import { Checkbox } from '~/components/ui/checkbox';
+import { BackButton } from '~/components/BackButton';
 import {
   validateArtworkImage,
   formatImageValidationError,
@@ -51,12 +52,12 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   // Fetch project details
   const projectRes = await fetch(`${apiUrl}/projects/${id}`);
   if (!projectRes.ok) throw new Error('Failed to fetch project');
-  const projectData = await projectRes.json();
+  const projectData = await projectRes.json() as { project: Project };
 
   // Fetch files for this project
   const filesRes = await fetch(`${apiUrl}/projects/${id}/files`);
   if (!filesRes.ok) throw new Error('Failed to fetch files');
-  const filesData = await filesRes.json();
+  const filesData = await filesRes.json() as { files: FileItem[] };
 
   return {
     project: projectData.project as Project,
@@ -84,6 +85,7 @@ export default function ProjectMaster() {
   // Validation state
   const [artworkValidation, setArtworkValidation] = useState('');
   const [metadataErrors, setMetadataErrors] = useState<Record<string, string>>({});
+  const [isrcValidation, setIsrcValidation] = useState<'typing' | 'valid' | 'invalid' | ''>('');
 
   // File preview state
   const [selectedFileId, setSelectedFileId] = useState<string | null>(null);
@@ -152,10 +154,21 @@ export default function ProjectMaster() {
     setArtworkFile(selectedFile);
   };
 
-  // Handle ISRC input with auto-formatting
+  // Handle ISRC input with auto-formatting and real-time validation
   const handleIsrcChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatISRC(e.target.value);
     setIsrc(formatted);
+
+    // Real-time validation feedback
+    if (formatted.length === 0) {
+      setIsrcValidation('');
+    } else if (formatted.length === 15) {
+      // Check if valid ISRC format
+      const isValid = /^[A-Z]{2}-[A-Z0-9]{3}-\d{2}-\d{5}$/.test(formatted);
+      setIsrcValidation(isValid ? 'valid' : 'invalid');
+    } else {
+      setIsrcValidation('typing');
+    }
   };
 
   // Upload master audio file
@@ -188,11 +201,11 @@ export default function ProjectMaster() {
       setUploadProgress(100);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Master upload failed');
       }
 
-      const data = await response.json();
+      const data = await response.json() as { file: { id: string } };
       setUploadedMasterKey(data.file.id);
       setSuccess('Master audio uploaded successfully');
       setMasterFile(null);
@@ -235,11 +248,11 @@ export default function ProjectMaster() {
       setUploadProgress(100);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Artwork upload failed');
       }
 
-      const data = await response.json();
+      const data = await response.json() as { file: { id: string } };
       setUploadedArtworkKey(data.file.id);
       setSuccess('Artwork uploaded successfully');
       setArtworkFile(null);
@@ -295,7 +308,7 @@ export default function ProjectMaster() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Metadata submission failed');
       }
 
@@ -332,9 +345,7 @@ export default function ProjectMaster() {
     <div className="container mx-auto py-8 space-y-8">
       {/* Header */}
       <div>
-        <Link to={`/project/${project.id}`} className="text-sm text-muted-foreground hover:text-primary">
-          ← Back to Project
-        </Link>
+        <BackButton to={`/project/${project.id}`} label="Back to Project" />
         <h1 className="text-4xl font-bold mt-2">Master & Artwork Upload</h1>
         <p className="text-muted-foreground">
           {project.artist_name} - {project.release_title}
@@ -462,13 +473,29 @@ export default function ProjectMaster() {
                   onChange={handleIsrcChange}
                   maxLength={17}
                   disabled={!uploadedMasterKey}
+                  className={
+                    isrcValidation === 'invalid'
+                      ? 'border-destructive'
+                      : isrcValidation === 'valid'
+                      ? 'border-green-500'
+                      : ''
+                  }
                 />
                 {metadataErrors.isrc && (
                   <p className="text-sm text-destructive">{metadataErrors.isrc}</p>
                 )}
-                <p className="text-xs text-muted-foreground">
-                  Format: CC-XXX-YY-NNNNN
-                </p>
+                {isrcValidation === 'typing' && (
+                  <p className="text-xs text-muted-foreground">Continue typing...</p>
+                )}
+                {isrcValidation === 'valid' && (
+                  <p className="text-xs text-green-600">✓ Valid ISRC format</p>
+                )}
+                {isrcValidation === 'invalid' && (
+                  <p className="text-xs text-destructive">✗ Invalid ISRC format (must be CC-XXX-YY-NNNNN)</p>
+                )}
+                {!isrcValidation && !metadataErrors.isrc && (
+                  <p className="text-xs text-muted-foreground">Format: CC-XXX-YY-NNNNN</p>
+                )}
               </div>
 
               <div className="space-y-2">

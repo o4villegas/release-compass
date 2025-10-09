@@ -9,7 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { Alert, AlertDescription } from '~/components/ui/alert';
 import { Badge } from '~/components/ui/badge';
 import { Progress } from '~/components/ui/progress';
-import { AlertCircle, CheckCircle, Upload, ArrowLeft, Receipt } from 'lucide-react';
+import { BackButton } from '~/components/BackButton';
+import { AlertCircle, CheckCircle, Upload, Receipt } from 'lucide-react';
 
 type BudgetCategory = 'production' | 'marketing' | 'content_creation' | 'distribution' | 'admin' | 'contingency';
 
@@ -58,23 +59,23 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 export async function loader({ params, context }: Route.LoaderArgs) {
   // Use direct DB access instead of HTTP fetch to avoid SSR issues
-  const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
+  const env = context.cloudflare as { env: { DB: D1Database; BUCKET: R2Bucket } };
 
   // Import handler functions
   const { getProjectDetails } = await import("../../workers/api-handlers/projects");
   const { getProjectBudget, getBudgetAlerts } = await import("../../workers/api-handlers/budget");
 
-  const projectData = await getProjectDetails(env.DB, params.id);
+  const projectData = await getProjectDetails(env.env.DB, params.id);
   if (!projectData) {
     throw new Response("Project not found", { status: 404 });
   }
 
-  const budgetData = await getProjectBudget(env.DB, params.id);
+  const budgetData = await getProjectBudget(env.env.DB, params.id);
   if (!budgetData) {
     throw new Response("Budget not found", { status: 404 });
   }
 
-  const alertsData = await getBudgetAlerts(env.DB, params.id);
+  const alertsData = await getBudgetAlerts(env.env.DB, params.id);
   if (!alertsData) {
     throw new Response("Budget alerts not found", { status: 404 });
   }
@@ -127,7 +128,7 @@ export default function ProjectBudget() {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('project_id', project.id);
+      formData.append('project_id', project.id || '');
       formData.append('file_type', 'receipts');
       formData.append('user_uuid', userUuid);
 
@@ -137,11 +138,11 @@ export default function ProjectBudget() {
       });
 
       if (!response.ok) {
-        const data = await response.json();
+        const data = await response.json() as { error?: string };
         throw new Error(data.error || 'Failed to upload receipt');
       }
 
-      const data = await response.json();
+      const data = await response.json() as { file: { storage_key: string } };
       setUploadedReceiptKey(data.file.storage_key);
       setSuccess('Receipt uploaded successfully');
     } catch (err: any) {
@@ -189,7 +190,12 @@ export default function ProjectBudget() {
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json() as {
+        code?: string;
+        userMessage?: string;
+        message?: string;
+        error?: string;
+      };
 
       if (!response.ok) {
         if (data.code === 'RECEIPT_REQUIRED') {
@@ -227,12 +233,7 @@ export default function ProjectBudget() {
   return (
     <div className="container mx-auto p-6 max-w-7xl">
       <div className="mb-6">
-        <Button asChild variant="ghost" size="sm">
-          <Link to={`/project/${project.id}`}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Project
-          </Link>
-        </Button>
+        <BackButton to={`/project/${project.id}`} label="Back to Project" />
       </div>
 
       <div className="mb-6">

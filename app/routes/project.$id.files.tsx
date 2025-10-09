@@ -10,6 +10,8 @@ import { Alert } from '~/components/ui/alert';
 import { Progress } from '~/components/ui/progress';
 import { AudioPlayer } from '~/components/AudioPlayer';
 import { Badge } from '~/components/ui/badge';
+import { BackButton } from '~/components/BackButton';
+import { EmptyState } from '~/components/ui/empty-state';
 
 type FileType = 'master' | 'stems' | 'artwork' | 'contracts' | 'receipts';
 
@@ -46,12 +48,12 @@ export async function loader({ params, request }: Route.LoaderArgs) {
   // Fetch project details
   const projectRes = await fetch(`${apiUrl}/projects/${id}`);
   if (!projectRes.ok) throw new Error('Failed to fetch project');
-  const projectData = await projectRes.json();
+  const projectData = await projectRes.json() as { project: any };
 
   // Fetch files for this project
   const filesRes = await fetch(`${apiUrl}/projects/${id}/files`);
   if (!filesRes.ok) throw new Error('Failed to fetch files');
-  const filesData = await filesRes.json();
+  const filesData = await filesRes.json() as { files: FileItem[] };
 
   return {
     project: projectData.project,
@@ -127,7 +129,7 @@ export default function ProjectFiles() {
       setUploadProgress(100);
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json() as { error?: string };
         throw new Error(errorData.error || 'Upload failed');
       }
 
@@ -164,9 +166,7 @@ export default function ProjectFiles() {
     <div className="container mx-auto py-8 space-y-8">
       {/* Header */}
       <div>
-        <Link to={`/project/${project.id}`} className="text-sm text-muted-foreground hover:text-primary">
-          ← Back to Project
-        </Link>
+        <BackButton to={`/project/${project.id}`} label="Back to Project" />
         <h1 className="text-4xl font-bold mt-2">Production Files</h1>
         <p className="text-muted-foreground">
           {project.artist_name} - {project.release_title}
@@ -341,11 +341,15 @@ export default function ProjectFiles() {
       )}
 
       {files.length === 0 && (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">No files uploaded yet. Upload your first file above.</p>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={<span className="text-5xl">📁</span>}
+          title="No Production Files"
+          description="Upload your master audio, stems, artwork, contracts, and receipts. All production files are stored securely and can be shared with your team."
+          action={{
+            label: "Upload First File",
+            to: "#upload-form"
+          }}
+        />
       )}
     </div>
   );

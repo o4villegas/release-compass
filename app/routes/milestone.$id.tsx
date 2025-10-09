@@ -6,7 +6,11 @@ import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Progress } from '~/components/ui/progress';
 import { Alert } from '~/components/ui/alert';
+import { BackButton } from '~/components/BackButton';
 import { ContentUpload } from '~/components/ContentUpload';
+import { QuotaNotMetModal } from '~/components/modals/QuotaNotMetModal';
+import { NotesNotAcknowledgedModal } from '~/components/modals/NotesNotAcknowledgedModal';
+import { TeaserRequirementModal } from '~/components/modals/TeaserRequirementModal';
 
 type QuotaRequirement = {
   content_type: string;
@@ -24,20 +28,20 @@ type QuotaStatus = {
 
 export async function loader({ params, context }: Route.LoaderArgs) {
   // Use direct DB access instead of HTTP fetch to avoid SSR issues
-  const env = context.cloudflare.env as { DB: D1Database; BUCKET: R2Bucket };
+  const env = context.cloudflare as { env: { DB: D1Database; BUCKET: R2Bucket } };
 
   // Import handler functions
   const { getMilestoneDetails } = await import("../../workers/api-handlers/milestones");
   const { getProjectDetails } = await import("../../workers/api-handlers/projects");
 
-  const milestoneData = await getMilestoneDetails(env.DB, params.id);
+  const milestoneData = await getMilestoneDetails(env.env.DB, params.id);
 
   if (!milestoneData) {
     throw new Response("Milestone not found", { status: 404 });
   }
 
   // Fetch project details
-  const projectData = await getProjectDetails(env.DB, milestoneData.milestone.project_id as string);
+  const projectData = await getProjectDetails(env.env.DB, milestoneData.milestone.project_id as string);
 
   if (!projectData) {
     throw new Response("Project not found", { status: 404 });
@@ -58,6 +62,12 @@ export default function MilestoneDetail() {
   const [error, setError] = useState('');
   const [showUpload, setShowUpload] = useState(false);
 
+  // Modal state
+  const [quotaModalOpen, setQuotaModalOpen] = useState(false);
+  const [notesModalOpen, setNotesModalOpen] = useState(false);
+  const [teaserModalOpen, setTeaserModalOpen] = useState(false);
+  const [errorData, setErrorData] = useState<any>(null);
+
   const handleComplete = async () => {
     setCompleting(true);
     setError('');
@@ -76,21 +86,29 @@ export default function MilestoneDetail() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.error === 'QUOTA_NOT_MET') {
-          // Show detailed quota error
-          const unmetRequirements = errorData.quota_status.requirements
-            .filter((r: QuotaRequirement) => !r.met)
-            .map((r: QuotaRequirement) => `${r.content_type.replace('_', ' ')}: ${r.missing} more needed`)
-            .join(', ');
-          throw new Error(`Cannot complete milestone: ${unmetRequirements}`);
-        } else if (errorData.error === 'NOTES_NOT_ACKNOWLEDGED') {
-          throw new Error(`Cannot complete milestone: Master file has ${errorData.file_id ? 'unacknowledged' : ''} feedback notes that must be acknowledged first. Go to Production Files to review and acknowledge.`);
-        } else if (errorData.error === 'TEASER_REQUIREMENT_NOT_MET') {
-          const status = errorData.teaser_status;
-          throw new Error(`Cannot complete milestone: Need ${status.missing} more teaser post${status.missing > 1 ? 's' : ''} (${status.actual}/${status.required} posted)`);
+        const data = await response.json() as {
+          error?: string;
+          message?: string;
+          quota_status?: { requirements: QuotaRequirement[] };
+          file_id?: string;
+          teaser_status?: { missing: number; actual: number; required: number };
+        };
+        setErrorData(data);
+
+        if (data.error === 'QUOTA_NOT_MET') {
+          setQuotaModalOpen(true);
+          setCompleting(false);
+          return;
+        } else if (data.error === 'NOTES_NOT_ACKNOWLEDGED') {
+          setNotesModalOpen(true);
+          setCompleting(false);
+          return;
+        } else if (data.error === 'TEASER_REQUIREMENT_NOT_MET') {
+          setTeaserModalOpen(true);
+          setCompleting(false);
+          return;
         }
-        throw new Error(errorData.message || 'Failed to complete milestone');
+        throw new Error(data.message || 'Failed to complete milestone');
       }
 
       // Success - redirect to project page
@@ -103,7 +121,7 @@ export default function MilestoneDetail() {
   };
 
   const daysUntilDue = Math.ceil(
-    (new Date(milestone.due_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+    (new Date(milestone.due_date || '').getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
   );
 
   const isOverdue = daysUntilDue < 0 && milestone.status !== 'complete';
@@ -113,9 +131,7 @@ export default function MilestoneDetail() {
     <div className="container mx-auto py-8 space-y-8">
       {/* Header */}
       <div>
-        <Link to={`/project/${project.id}`} className="text-sm text-muted-foreground hover:text-primary">
-          ← Back to Project
-        </Link>
+        <BackButton to={`/project/${project.id}`} label="Back to Project" />
         <div className="flex items-start justify-between mt-2">
           <div>
             <h1 className="text-4xl font-bold">{milestone.name}</h1>
@@ -142,7 +158,7 @@ export default function MilestoneDetail() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {new Date(milestone.due_date).toLocaleDateString()}
+              {new Date(milestone.due_date || '').toLocaleDateString()}
             </div>
             <p className="text-sm text-muted-foreground mt-1">
               {daysUntilDue > 0 ? `${daysUntilDue} days remaining` : `${Math.abs(daysUntilDue)} days overdue`}
@@ -224,8 +240,8 @@ export default function MilestoneDetail() {
           </Button>
           {showUpload && (
             <ContentUpload
-              projectId={project.id}
-              milestoneId={milestone.id}
+              projectId={project.id || ''}
+              milestoneId={milestone.id || ''}
               onUploadComplete={() => window.location.reload()}
             />
           )}
@@ -281,6 +297,30 @@ export default function MilestoneDetail() {
           </CardHeader>
         </Card>
       )}
+
+      {/* Error Modals */}
+      <QuotaNotMetModal
+        open={quotaModalOpen}
+        onClose={() => setQuotaModalOpen(false)}
+        requirements={errorData?.quota_status?.requirements || []}
+        projectId={project.id || ''}
+      />
+
+      <NotesNotAcknowledgedModal
+        open={notesModalOpen}
+        onClose={() => setNotesModalOpen(false)}
+        fileId={errorData?.file_id || ''}
+        projectId={project.id || ''}
+      />
+
+      <TeaserRequirementModal
+        open={teaserModalOpen}
+        onClose={() => setTeaserModalOpen(false)}
+        required={errorData?.teaser_status?.required || 2}
+        actual={errorData?.teaser_status?.actual || 0}
+        missing={errorData?.teaser_status?.missing || 2}
+        projectId={project.id || ''}
+      />
     </div>
   );
 }
