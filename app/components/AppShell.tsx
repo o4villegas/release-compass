@@ -22,9 +22,19 @@ export function AppShell({ children }: AppShellProps) {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-14 max-w-screen-2xl items-center">
-          <div className="mr-4 flex">
-            <Link to="/" className="mr-6 flex items-center space-x-2">
-              <span className="font-bold text-primary text-xl">Release Compass</span>
+          <div className="mr-4 flex items-center gap-6">
+            <Link to="/" className="flex items-center space-x-2">
+              <img
+                src="/releasecompass-logo.png"
+                alt="Release Compass"
+                className="h-8 w-auto object-contain"
+              />
+            </Link>
+            <Link
+              to="/projects"
+              className="text-sm font-medium transition-colors hover:text-primary"
+            >
+              Projects
             </Link>
           </div>
 
@@ -90,7 +100,9 @@ function generateBreadcrumbs(pathname: string): Breadcrumb[] {
     // Determine label based on segment
     let label = segment;
 
-    if (segment === 'project') {
+    if (segment === 'projects') {
+      label = 'Projects';
+    } else if (segment === 'project') {
       label = 'Project';
       // If next segment is UUID, we'll show project name (from context)
       if (i + 1 < segments.length && isUuid(segments[i + 1])) {

@@ -10,6 +10,29 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>();
 
 /**
+ * GET /api/projects
+ * Get all projects for a user with aggregated stats
+ */
+app.get('/projects', async (c) => {
+  try {
+    const userUuid = c.req.query('user_uuid');
+
+    if (!userUuid) {
+      return c.json({ error: 'user_uuid query parameter is required' }, 400);
+    }
+
+    // Use extracted handler function
+    const { getAllProjects } = await import('../api-handlers/projects');
+    const data = await getAllProjects(c.env.DB, userUuid);
+
+    return c.json(data.projects);
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+/**
  * POST /api/projects
  * Create a new project with auto-generated milestones
  */

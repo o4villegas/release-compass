@@ -1,7 +1,9 @@
 import { test, expect } from '@playwright/test';
 
 const PRODUCTION_URL = 'https://release-compass.lando555.workers.dev';
-const DEMO_PROJECT_ID = 'b199c34c-6641-496a-9832-b962d9563a74';
+// Official demo project ID (matches home page link and demo data seed scripts)
+// Data seeded by: scripts/enhance-demo-project.sql
+const DEMO_PROJECT_ID = 'b434c7af-5501-4ef7-a640-9cb19b2fe28d';
 
 test.describe('Comprehensive UI/UX Verification', () => {
 

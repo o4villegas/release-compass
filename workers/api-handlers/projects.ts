@@ -57,6 +57,62 @@ async function getQuotaStatus(db: D1Database, milestoneId: string) {
   };
 }
 
+/**
+ * Get all projects for a user with aggregated stats
+ */
+export async function getAllProjects(db: D1Database, userUuid: string) {
+  // Fetch all projects for this user
+  const projects = await db.prepare(`
+    SELECT * FROM projects
+    WHERE created_by = ?
+    ORDER BY created_at DESC
+  `).bind(userUuid).all();
+
+  if (projects.results.length === 0) {
+    return { projects: [] };
+  }
+
+  // Get aggregated stats for each project
+  const projectsWithStats = await Promise.all(
+    projects.results.map(async (project) => {
+      const projectId = (project as { id: string }).id;
+
+      // Count milestones
+      const milestonesCount = await db.prepare(`
+        SELECT
+          COUNT(*) as total,
+          SUM(CASE WHEN status = 'complete' THEN 1 ELSE 0 END) as complete
+        FROM milestones
+        WHERE project_id = ?
+      `).bind(projectId).first();
+
+      // Get budget spent
+      const budgetSpent = await db.prepare(`
+        SELECT COALESCE(SUM(amount), 0) as total
+        FROM budget_items
+        WHERE project_id = ?
+      `).bind(projectId).first();
+
+      // Count content items
+      const contentCount = await db.prepare(`
+        SELECT COUNT(*) as total
+        FROM content_items
+        WHERE project_id = ?
+      `).bind(projectId).first();
+
+      return {
+        ...project,
+        milestones_total: (milestonesCount?.total as number) || 0,
+        milestones_complete: (milestonesCount?.complete as number) || 0,
+        budget_spent: (budgetSpent?.total as number) || 0,
+        content_items_count: (contentCount?.total as number) || 0,
+      };
+    })
+  );
+
+  return { projects: projectsWithStats };
+}
+
 export async function getProjectDetails(db: D1Database, projectId: string) {
   // Fetch project
   const project = await db.prepare(`

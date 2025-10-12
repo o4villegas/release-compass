@@ -13,6 +13,7 @@ import { AudioPlayer } from '~/components/AudioPlayer';
 import { Badge } from '~/components/ui/badge';
 import { Checkbox } from '~/components/ui/checkbox';
 import { BackButton } from '~/components/BackButton';
+import { CheckCircle, XCircle } from 'lucide-react';
 import {
   validateArtworkImage,
   formatImageValidationError,
@@ -398,9 +399,9 @@ export default function ProjectMaster() {
             <Button
               onClick={handleMasterUpload}
               disabled={!masterFile || uploading || !!uploadedMasterKey}
-              className="w-full"
+              className="w-full flex items-center gap-2 justify-center"
             >
-              {uploadedMasterKey ? '✓ Master Uploaded' : 'Upload Master'}
+              {uploadedMasterKey ? <><CheckCircle className="h-4 w-4" /> Master Uploaded</> : 'Upload Master'}
             </Button>
           </CardContent>
         </Card>
@@ -443,9 +444,9 @@ export default function ProjectMaster() {
             <Button
               onClick={handleArtworkUpload}
               disabled={!artworkFile || uploading || !!uploadedArtworkKey}
-              className="w-full"
+              className="w-full flex items-center gap-2 justify-center"
             >
-              {uploadedArtworkKey ? '✓ Artwork Uploaded' : 'Upload Artwork'}
+              {uploadedArtworkKey ? <><CheckCircle className="h-4 w-4" /> Artwork Uploaded</> : 'Upload Artwork'}
             </Button>
           </CardContent>
         </Card>
@@ -488,10 +489,14 @@ export default function ProjectMaster() {
                   <p className="text-xs text-muted-foreground">Continue typing...</p>
                 )}
                 {isrcValidation === 'valid' && (
-                  <p className="text-xs text-green-600">✓ Valid ISRC format</p>
+                  <p className="text-xs text-green-600 flex items-center gap-1">
+                    <CheckCircle className="h-3 w-3" /> Valid ISRC format
+                  </p>
                 )}
                 {isrcValidation === 'invalid' && (
-                  <p className="text-xs text-destructive">✗ Invalid ISRC format (must be CC-XXX-YY-NNNNN)</p>
+                  <p className="text-xs text-destructive flex items-center gap-1">
+                    <XCircle className="h-3 w-3" /> Invalid ISRC format (must be CC-XXX-YY-NNNNN)
+                  </p>
                 )}
                 {!isrcValidation && !metadataErrors.isrc && (
                   <p className="text-xs text-muted-foreground">Format: CC-XXX-YY-NNNNN</p>
@@ -599,7 +604,9 @@ export default function ProjectMaster() {
                     </div>
                     <div className="flex gap-2">
                       {fileItem.notes_acknowledged === 1 && (
-                        <Badge variant="default">✓ Acknowledged</Badge>
+                        <Badge variant="default" className="flex items-center gap-1">
+                          <CheckCircle className="h-3 w-3" /> Acknowledged
+                        </Badge>
                       )}
                       <Button
                         onClick={() => loadFileDetails(fileItem.id)}

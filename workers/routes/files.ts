@@ -27,7 +27,7 @@ const FILE_SIZE_LIMITS: Record<FileType, number> = {
  * POST /api/files/upload
  * Upload master audio, stems, artwork, or other files to R2
  */
-app.post('/upload', async (c) => {
+app.post('/files/upload', async (c) => {
   try {
     const body = await c.req.parseBody();
 
@@ -118,7 +118,7 @@ app.post('/upload', async (c) => {
  * GET /api/files/:id
  * Get file details with presigned download URL
  */
-app.get('/:id', async (c) => {
+app.get('/files/:id', async (c) => {
   try {
     const { id } = c.req.param();
 
@@ -155,7 +155,7 @@ app.get('/:id', async (c) => {
  * POST /api/files/:fileId/notes
  * Add timestamp note to a file
  */
-app.post('/:fileId/notes', async (c) => {
+app.post('/files/:fileId/notes', async (c) => {
   try {
     const { fileId } = c.req.param();
     const body = await c.req.json();
@@ -217,7 +217,7 @@ app.post('/:fileId/notes', async (c) => {
  * GET /api/files/:fileId/notes
  * Get all notes for a file, ordered by timestamp
  */
-app.get('/:fileId/notes', async (c) => {
+app.get('/files/:fileId/notes', async (c) => {
   try {
     const { fileId } = c.req.param();
 
@@ -243,7 +243,7 @@ app.get('/:fileId/notes', async (c) => {
  * POST /api/files/:fileId/acknowledge-notes
  * Mark all notes as acknowledged by the file uploader
  */
-app.post('/:fileId/acknowledge-notes', async (c) => {
+app.post('/files/:fileId/acknowledge-notes', async (c) => {
   try {
     const { fileId } = c.req.param();
     const body = await c.req.json();
@@ -304,7 +304,7 @@ app.post('/:fileId/acknowledge-notes', async (c) => {
  * POST /api/files/:fileId/metadata
  * Add metadata (ISRC, genre, explicit_content) to a master file
  */
-app.post('/:fileId/metadata', async (c) => {
+app.post('/files/:fileId/metadata', async (c) => {
   try {
     const { fileId } = c.req.param();
     const body = await c.req.json();

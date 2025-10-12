@@ -6,8 +6,10 @@ export default [
 
   // App layout wrapper for authenticated routes
   layout("routes/_app-layout.tsx", [
+    route("projects", "routes/projects.tsx"),
     route("project/:id", "routes/project.$id.tsx"),
     route("project/:id/budget", "routes/project.$id.budget.tsx"),
+    route("project/:id/calendar", "routes/project.$id.calendar.tsx"),
     route("project/:id/content", "routes/project.$id.content.tsx"),
     route("project/:id/files", "routes/project.$id.files.tsx"),
     route("project/:id/master", "routes/project.$id.master.tsx"),

@@ -1,5 +1,6 @@
 import type { Route } from "./+types/project.$id";
 import { Link, useNavigation } from "react-router";
+import { FileText, DollarSign, FolderOpen, Calendar as CalendarIcon, Video, Music, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -9,6 +10,8 @@ import { BackButton } from "~/components/BackButton";
 import { MilestoneGantt } from "~/components/MilestoneGantt";
 import { ContentQuotaWidget } from "~/components/widgets/ContentQuotaWidget";
 import { DashboardSkeleton } from "~/components/skeletons/DashboardSkeleton";
+import { ActionDashboard } from "~/components/ActionDashboard";
+import { SmartDeadlines } from "~/components/SmartDeadlines";
 import type { ProjectWithMilestones, Milestone } from "@/types";
 
 export async function loader({ params, context }: Route.LoaderArgs): Promise<ProjectWithMilestones> {
@@ -101,39 +104,53 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
               <div className="text-sm text-muted-foreground mb-1">Release Date</div>
               <div className="text-2xl font-semibold">{formatDate(project.release_date || '')}</div>
             </div>
-            <div className="flex gap-2">
-              <Button asChild variant="outline" size="sm">
-                <Link to={`/project/${project.id}/master`}>
-                  Master Upload
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-w-md">
+              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
+                <Link to={`/project/${project.id}/content`} className="flex items-center gap-2">
+                  <FileText className="h-4 w-4" />
+                  Content
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to={`/project/${project.id}/files`}>
-                  Production Files
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to={`/project/${project.id}/budget`}>
+              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
+                <Link to={`/project/${project.id}/budget`} className="flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
                   Budget
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="sm">
-                <Link to={`/project/${project.id}/teasers`}>
+              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
+                <Link to={`/project/${project.id}/files`} className="flex items-center gap-2">
+                  <FolderOpen className="h-4 w-4" />
+                  Files
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
+                <Link to={`/project/${project.id}/calendar`} className="flex items-center gap-2">
+                  <CalendarIcon className="h-4 w-4" />
+                  Calendar
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
+                <Link to={`/project/${project.id}/teasers`} className="flex items-center gap-2">
+                  <Video className="h-4 w-4" />
                   Teasers
                 </Link>
               </Button>
-              <Button asChild size="sm">
-                <Link to={`/project/${project.id}/content`}>
-                  Content Library
+              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
+                <Link to={`/project/${project.id}/master`} className="flex items-center gap-2">
+                  <Music className="h-4 w-4" />
+                  Master
                 </Link>
               </Button>
             </div>
           </div>
         </div>
 
+        {/* Action Dashboard */}
+        <ActionDashboard projectId={project.id} />
+
         {/* Overview Cards */}
         <div className="grid md:grid-cols-4 gap-6">
-          <Card className="border-border bg-card">
+          <Card elevation="raised" glow="primary" className="border-border bg-card">
             <CardHeader>
               <CardTitle>Project Progress</CardTitle>
               <CardDescription>{completedMilestones} of {totalMilestones} milestones complete</CardDescription>
@@ -146,7 +163,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-card">
+          <Card elevation="raised" className="border-border bg-card">
             <CardHeader>
               <CardTitle>Budget</CardTitle>
               <CardDescription>Total allocated budget</CardDescription>
@@ -162,7 +179,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
             </CardContent>
           </Card>
 
-          <Card className={`border-2 ${cleared_for_release?.cleared ? 'border-green-500 bg-green-50' : 'border-yellow-500 bg-yellow-50'}`}>
+          <Card elevation="floating" glow={cleared_for_release?.cleared ? "primary" : "none"} className={`border-2 ${cleared_for_release?.cleared ? 'border-primary bg-primary/5' : 'border-destructive bg-destructive/5'}`}>
             <CardHeader>
               <CardTitle>Cleared for Release</CardTitle>
               <CardDescription>Release readiness status</CardDescription>
@@ -170,28 +187,32 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
             <CardContent>
               <div className="space-y-3">
                 <Badge
-                  variant={cleared_for_release?.cleared ? "default" : "outline"}
-                  className={`text-lg px-4 py-2 ${cleared_for_release?.cleared ? 'bg-green-600 text-white' : 'bg-yellow-600 text-white'}`}
+                  variant={cleared_for_release?.cleared ? "default" : "destructive"}
+                  className="text-lg px-4 py-2 flex items-center gap-2 w-fit"
                 >
-                  {cleared_for_release?.cleared ? '✓ CLEARED' : '✗ NOT CLEARED'}
+                  {cleared_for_release?.cleared ? (
+                    <><CheckCircle className="h-5 w-5" /> CLEARED</>
+                  ) : (
+                    <><XCircle className="h-5 w-5" /> NOT CLEARED</>
+                  )}
                 </Badge>
 
                 {cleared_for_release && !cleared_for_release.cleared && (
                   <div className="space-y-2 mt-3">
-                    <p className="text-sm font-semibold text-gray-700">Missing Requirements:</p>
+                    <p className="text-sm font-semibold">Missing Requirements:</p>
                     <ul className="text-xs space-y-1">
                       {cleared_for_release.reasons.slice(0, 3).map((reason, idx) => (
-                        <li key={idx} className="text-gray-600">• {reason}</li>
+                        <li key={idx} className="text-muted-foreground">• {reason}</li>
                       ))}
                       {cleared_for_release.reasons.length > 3 && (
-                        <li className="text-gray-500 italic">+ {cleared_for_release.reasons.length - 3} more...</li>
+                        <li className="text-muted-foreground/70 italic">+ {cleared_for_release.reasons.length - 3} more...</li>
                       )}
                     </ul>
                   </div>
                 )}
 
                 {cleared_for_release?.cleared && (
-                  <p className="text-sm text-green-700 font-medium">
+                  <p className="text-sm font-medium">
                     All requirements met - ready for distribution!
                   </p>
                 )}
@@ -204,7 +225,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* Timeline Insights Panel */}
-        <Card className="border-l-4 border-l-primary">
+        <Card elevation="raised" glow="primary" className="border-l-4 border-l-primary">
           <CardContent className="pt-6">
             <div className="grid md:grid-cols-4 gap-6">
               <div>
@@ -222,14 +243,18 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
                 <div className="text-2xl font-bold">
                   {Math.ceil((new Date(project.release_date || '').getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))} days
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">
+                <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
                   {(() => {
                     const overdueMilestones = milestones.filter((m: Milestone) => {
                       const dueDate = new Date(m.due_date);
                       const now = new Date();
                       return dueDate < now && m.status !== 'complete';
                     });
-                    return overdueMilestones.length === 0 ? '✓ On track' : `⚠ ${overdueMilestones.length} overdue`;
+                    return overdueMilestones.length === 0 ? (
+                      <><CheckCircle className="h-3 w-3" /> On track</>
+                    ) : (
+                      <><AlertTriangle className="h-3 w-3 text-yellow-500" /> {overdueMilestones.length} overdue</>
+                    );
                   })()}
                 </div>
               </div>
@@ -274,48 +299,12 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
           projectStartDate={project.created_at}
         />
 
-        {/* Quick Stats */}
-        <div className="grid md:grid-cols-4 gap-4">
-          <Card className="border-border bg-card">
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-primary">
-                {milestones.filter((m: Milestone) => m.blocks_release === 1 && m.status !== 'complete').length}
-              </div>
-              <div className="text-sm text-muted-foreground">Blocking milestones remaining</div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border bg-card">
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-secondary">
-                {milestones.filter((m: Milestone) => {
-                  const dueDate = new Date(m.due_date);
-                  const now = new Date();
-                  return dueDate < now && m.status !== 'complete';
-                }).length}
-              </div>
-              <div className="text-sm text-muted-foreground">Overdue milestones</div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border bg-card">
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold">
-                {Math.ceil((new Date(project.release_date || '').getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}
-              </div>
-              <div className="text-sm text-muted-foreground">Days until release</div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border bg-card">
-            <CardContent className="pt-6">
-              <div className="text-2xl font-bold">
-                {Object.keys(budget_summary?.by_category || {}).length}
-              </div>
-              <div className="text-sm text-muted-foreground">Budget categories used</div>
-            </CardContent>
-          </Card>
-        </div>
+        {/* Smart Deadlines */}
+        <SmartDeadlines
+          milestones={milestones}
+          releaseDate={project.release_date || ''}
+          projectId={project.id}
+        />
       </div>
     </div>
   );

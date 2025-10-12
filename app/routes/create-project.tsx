@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Rocket } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -93,86 +94,101 @@ export default function CreateProject() {
 
   return (
     <div className="min-h-screen bg-background p-8">
-      <div className="max-w-2xl mx-auto">
+      <div className="max-w-4xl mx-auto animate-scale-in">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">
-            Release Compass
-          </h1>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 rounded-lg bg-primary/10 border border-primary/20 glow-sm">
+              <Rocket className="h-6 w-6 text-primary" />
+            </div>
+            <h1 className="text-4xl font-bold text-primary">
+              Release Compass
+            </h1>
+          </div>
           <p className="text-muted-foreground">
             Create a new music release project
           </p>
         </div>
 
-        <Card className="border-border bg-card">
+        <Card elevation="floating" glow="primary" className="border-border bg-card">
           <CardHeader>
-            <CardTitle>New Release Project</CardTitle>
+            <CardTitle className="text-2xl">New Release Project</CardTitle>
             <CardDescription>
               Enter your release details. Milestones and timelines will be automatically generated.
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 stagger-children">
               {error && (
                 <div className="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded">
                   {error}
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="artist_name">Artist Name</Label>
-                <Input
-                  id="artist_name"
-                  placeholder="Enter artist name"
-                  value={formData.artist_name}
-                  onChange={(e) => setFormData({ ...formData, artist_name: e.target.value })}
-                  required
-                />
+              {/* Row 1: Artist Name + Release Title */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="artist_name">Artist Name</Label>
+                  <Input
+                    id="artist_name"
+                    placeholder="Enter artist name"
+                    value={formData.artist_name}
+                    onChange={(e) => setFormData({ ...formData, artist_name: e.target.value })}
+                    className="focus-glow"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="release_title">Release Title</Label>
+                  <Input
+                    id="release_title"
+                    placeholder="Enter release title"
+                    value={formData.release_title}
+                    onChange={(e) => setFormData({ ...formData, release_title: e.target.value })}
+                    className="focus-glow"
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="release_title">Release Title</Label>
-                <Input
-                  id="release_title"
-                  placeholder="Enter release title"
-                  value={formData.release_title}
-                  onChange={(e) => setFormData({ ...formData, release_title: e.target.value })}
-                  required
-                />
+              {/* Row 2: Release Date + Release Type */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="release_date">Release Date</Label>
+                  <Input
+                    id="release_date"
+                    type="date"
+                    value={formData.release_date}
+                    onChange={(e) => setFormData({ ...formData, release_date: e.target.value })}
+                    className="focus-glow"
+                    required
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Must be a future date
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="release_type">Release Type</Label>
+                  <Select
+                    value={formData.release_type}
+                    onValueChange={(value: 'single' | 'EP' | 'album') =>
+                      setFormData({ ...formData, release_type: value })
+                    }
+                  >
+                    <SelectTrigger className="focus-glow">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="single">Single</SelectItem>
+                      <SelectItem value="EP">EP</SelectItem>
+                      <SelectItem value="album">Album</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="release_date">Release Date</Label>
-                <Input
-                  id="release_date"
-                  type="date"
-                  value={formData.release_date}
-                  onChange={(e) => setFormData({ ...formData, release_date: e.target.value })}
-                  required
-                />
-                <p className="text-sm text-muted-foreground">
-                  Must be a future date
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="release_type">Release Type</Label>
-                <Select
-                  value={formData.release_type}
-                  onValueChange={(value: 'single' | 'EP' | 'album') =>
-                    setFormData({ ...formData, release_type: value })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="single">Single</SelectItem>
-                    <SelectItem value="EP">EP</SelectItem>
-                    <SelectItem value="album">Album</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
+              {/* Row 3: Total Budget (full width) */}
               <div className="space-y-2">
                 <Label htmlFor="total_budget">Total Budget ($)</Label>
                 <Input
@@ -181,6 +197,7 @@ export default function CreateProject() {
                   placeholder="50000"
                   value={formData.total_budget}
                   onChange={(e) => setFormData({ ...formData, total_budget: e.target.value })}
+                  className="focus-glow"
                   required
                   min="1"
                 />
@@ -192,8 +209,9 @@ export default function CreateProject() {
               <div className="flex gap-4">
                 <Button
                   type="submit"
+                  size="lg"
                   disabled={loading}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 btn-primary"
+                  className="glow-hover-md"
                 >
                   {loading ? 'Creating Project...' : 'Create Project'}
                 </Button>

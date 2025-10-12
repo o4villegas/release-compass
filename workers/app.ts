@@ -6,6 +6,8 @@ import milestonesRoutes from "./routes/milestones";
 import filesRoutes from "./routes/files";
 import budgetRoutes from "./routes/budget";
 import teasersRoutes from "./routes/teasers";
+import actionsRoutes from "./routes/actions";
+import calendarRoutes from "./routes/calendar";
 
 const app = new Hono();
 
@@ -28,6 +30,8 @@ api.route("/budget-items", budgetRoutes);
 api.route("/", budgetRoutes); // For /api/projects/:projectId/budget routes
 api.route("/teasers", teasersRoutes);
 api.route("/", teasersRoutes); // For /api/projects/:projectId/teasers routes
+api.route("/", actionsRoutes); // For /api/projects/:projectId/actions routes
+api.route("/", calendarRoutes); // For /api/projects/:projectId/calendar and /api/calendar/schedule routes
 app.route("/api", api);
 
 // React Router handler for all non-API routes

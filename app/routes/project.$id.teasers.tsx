@@ -13,7 +13,7 @@ import { Progress } from '~/components/ui/progress';
 import { Checkbox } from '~/components/ui/checkbox';
 import { BackButton } from '~/components/BackButton';
 import { EmptyState } from '~/components/ui/empty-state';
-import { AlertCircle, CheckCircle, Calendar, ExternalLink } from 'lucide-react';
+import { AlertCircle, CheckCircle, Calendar, ExternalLink, Video } from 'lucide-react';
 
 type Platform = 'TikTok' | 'Instagram' | 'YouTube' | 'Twitter' | 'Facebook';
 
@@ -65,9 +65,17 @@ export async function loader({ params, context }: Route.LoaderArgs) {
     throw new Response("Project not found", { status: 404 });
   }
 
+  // Parse engagement_metrics JSON strings
+  const parsedTeasers = (teasersData.teasers || []).map((teaser: any) => ({
+    ...teaser,
+    engagement_metrics: teaser.engagement_metrics
+      ? JSON.parse(teaser.engagement_metrics as string)
+      : null
+  }));
+
   return {
     project: projectData.project,
-    teasers: teasersData.teasers as TeaserPost[],
+    teasers: parsedTeasers as TeaserPost[],
     requirement: teasersData.requirement as TeaserRequirement,
     optimalWindow: teasersData.optimal_posting_window as { start: string; end: string } | null,
   };
@@ -227,7 +235,7 @@ export default function ProjectTeasers() {
       </div>
 
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">{project.release_title}</h1>
+        <h1 className="text-4xl font-bold">{project.release_title}</h1>
         <p className="text-muted-foreground">Teaser Content Tracker</p>
       </div>
 
@@ -420,7 +428,7 @@ export default function ProjectTeasers() {
             <div className="space-y-4">
               {teasers.length === 0 ? (
                 <EmptyState
-                  icon={<span className="text-5xl">🎬</span>}
+                  icon={<Video className="h-16 w-16 text-muted-foreground" />}
                   title="No Teasers Posted"
                   description="Start building anticipation by posting teaser clips on social media. Teasers help engage your audience before the release."
                   action={{

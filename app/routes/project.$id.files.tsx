@@ -1,6 +1,6 @@
 import type { Route } from "./+types/project.$id.files";
 import type { D1Database, R2Bucket } from '@cloudflare/workers-types';
-import { useLoaderData, Link } from 'react-router';
+import { useLoaderData, Link, useRevalidator } from 'react-router';
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card';
 import { Button } from '~/components/ui/button';
@@ -13,6 +13,7 @@ import { AudioPlayer } from '~/components/AudioPlayer';
 import { Badge } from '~/components/ui/badge';
 import { BackButton } from '~/components/BackButton';
 import { EmptyState } from '~/components/ui/empty-state';
+import { Folder, CheckCircle, Music } from 'lucide-react';
 
 type FileType = 'master' | 'stems' | 'artwork' | 'contracts' | 'receipts';
 
@@ -63,6 +64,7 @@ export async function loader({ params, context }: Route.LoaderArgs) {
 
 export default function ProjectFiles() {
   const { project, files } = useLoaderData<typeof loader>();
+  const revalidator = useRevalidator();
   const [file, setFile] = useState<File | null>(null);
   const [fileType, setFileType] = useState<FileType>('master');
   const [uploading, setUploading] = useState(false);
@@ -133,10 +135,10 @@ export default function ProjectFiles() {
         throw new Error(errorData.error || 'Upload failed');
       }
 
-      // Reset form and reload
+      // Reset form and revalidate
       setFile(null);
       setUploadProgress(0);
-      window.location.reload();
+      revalidator.revalidate();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -231,44 +233,62 @@ export default function ProjectFiles() {
       {masterFiles.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-2xl font-bold">Master Audio Files</h2>
-          {masterFiles.map((fileItem) => (
-            <div key={fileItem.id}>
-              <Card>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">
-                        {fileItem.storage_key.split('/').pop()}
-                      </CardTitle>
-                      <CardDescription>
-                        Uploaded {new Date(fileItem.uploaded_at).toLocaleDateString()}
-                      </CardDescription>
-                    </div>
-                    <div className="flex gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+            {/* Left: File List */}
+            <div className="space-y-4">
+              {masterFiles.map((fileItem) => (
+                <Card
+                  key={fileItem.id}
+                  onClick={() => loadFileDetails(fileItem.id)}
+                  className={`cursor-pointer transition-all ${selectedFileId === fileItem.id ? 'ring-2 ring-primary' : ''}`}
+                  elevation="raised"
+                  glow={selectedFileId === fileItem.id ? "primary" : "none"}
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-lg">
+                          {fileItem.storage_key.split('/').pop()}
+                        </CardTitle>
+                        <CardDescription>
+                          Uploaded {new Date(fileItem.uploaded_at).toLocaleDateString()}
+                        </CardDescription>
+                      </div>
                       {fileItem.notes_acknowledged === 1 && (
-                        <Badge variant="default">✓ Acknowledged</Badge>
+                        <Badge variant="default" className="flex items-center gap-1">
+                          <CheckCircle className="h-3 w-3" /> Acknowledged
+                        </Badge>
                       )}
-                      <Button onClick={() => loadFileDetails(fileItem.id)} variant="outline" size="sm">
-                        {selectedFileId === fileItem.id ? 'Hide Player' : 'Show Player'}
-                      </Button>
                     </div>
-                  </div>
-                </CardHeader>
-              </Card>
-              {selectedFileId === fileItem.id && fileDetails && (
-                <div className="mt-4">
-                  <AudioPlayer
-                    fileId={fileItem.id}
-                    audioUrl={fileDetails.download_url}
-                    userUuid={userUuid}
-                    uploadedBy={fileItem.uploaded_by}
-                    notesAcknowledged={fileItem.notes_acknowledged === 1}
-                    onAcknowledge={() => window.location.reload()}
-                  />
-                </div>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+
+            {/* Right: Sticky Sidebar Preview */}
+            <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+              {selectedFileId && fileDetails ? (
+                <Card elevation="floating" glow="primary">
+                  <CardContent className="pt-6">
+                    <AudioPlayer
+                      fileId={selectedFileId}
+                      audioUrl={fileDetails.download_url}
+                      userUuid={userUuid}
+                      uploadedBy={masterFiles.find(f => f.id === selectedFileId)?.uploaded_by || ''}
+                      notesAcknowledged={masterFiles.find(f => f.id === selectedFileId)?.notes_acknowledged === 1}
+                      onAcknowledge={() => revalidator.revalidate()}
+                    />
+                  </CardContent>
+                </Card>
+              ) : (
+                <EmptyState
+                  icon={<Music className="h-12 w-12 text-muted-foreground" />}
+                  title="No File Selected"
+                  description="Click on a master audio file to preview it with the audio player."
+                />
               )}
             </div>
-          ))}
+          </div>
         </div>
       )}
 
@@ -276,44 +296,62 @@ export default function ProjectFiles() {
       {stemFiles.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-2xl font-bold">Stems</h2>
-          {stemFiles.map((fileItem) => (
-            <div key={fileItem.id}>
-              <Card>
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">
-                        {fileItem.storage_key.split('/').pop()}
-                      </CardTitle>
-                      <CardDescription>
-                        Uploaded {new Date(fileItem.uploaded_at).toLocaleDateString()}
-                      </CardDescription>
-                    </div>
-                    <div className="flex gap-2">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+            {/* Left: File List */}
+            <div className="space-y-4">
+              {stemFiles.map((fileItem) => (
+                <Card
+                  key={fileItem.id}
+                  onClick={() => loadFileDetails(fileItem.id)}
+                  className={`cursor-pointer transition-all ${selectedFileId === fileItem.id ? 'ring-2 ring-primary' : ''}`}
+                  elevation="raised"
+                  glow={selectedFileId === fileItem.id ? "primary" : "none"}
+                >
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-lg">
+                          {fileItem.storage_key.split('/').pop()}
+                        </CardTitle>
+                        <CardDescription>
+                          Uploaded {new Date(fileItem.uploaded_at).toLocaleDateString()}
+                        </CardDescription>
+                      </div>
                       {fileItem.notes_acknowledged === 1 && (
-                        <Badge variant="default">✓ Acknowledged</Badge>
+                        <Badge variant="default" className="flex items-center gap-1">
+                          <CheckCircle className="h-3 w-3" /> Acknowledged
+                        </Badge>
                       )}
-                      <Button onClick={() => loadFileDetails(fileItem.id)} variant="outline" size="sm">
-                        {selectedFileId === fileItem.id ? 'Hide Player' : 'Show Player'}
-                      </Button>
                     </div>
-                  </div>
-                </CardHeader>
-              </Card>
-              {selectedFileId === fileItem.id && fileDetails && (
-                <div className="mt-4">
-                  <AudioPlayer
-                    fileId={fileItem.id}
-                    audioUrl={fileDetails.download_url}
-                    userUuid={userUuid}
-                    uploadedBy={fileItem.uploaded_by}
-                    notesAcknowledged={fileItem.notes_acknowledged === 1}
-                    onAcknowledge={() => window.location.reload()}
-                  />
-                </div>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+
+            {/* Right: Sticky Sidebar Preview */}
+            <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+              {selectedFileId && fileDetails ? (
+                <Card elevation="floating" glow="primary">
+                  <CardContent className="pt-6">
+                    <AudioPlayer
+                      fileId={selectedFileId}
+                      audioUrl={fileDetails.download_url}
+                      userUuid={userUuid}
+                      uploadedBy={stemFiles.find(f => f.id === selectedFileId)?.uploaded_by || ''}
+                      notesAcknowledged={stemFiles.find(f => f.id === selectedFileId)?.notes_acknowledged === 1}
+                      onAcknowledge={() => revalidator.revalidate()}
+                    />
+                  </CardContent>
+                </Card>
+              ) : (
+                <EmptyState
+                  icon={<Music className="h-12 w-12 text-muted-foreground" />}
+                  title="No File Selected"
+                  description="Click on a stem file to preview it with the audio player."
+                />
               )}
             </div>
-          ))}
+          </div>
         </div>
       )}
 
@@ -342,7 +380,7 @@ export default function ProjectFiles() {
 
       {files.length === 0 && (
         <EmptyState
-          icon={<span className="text-5xl">📁</span>}
+          icon={<Folder className="h-16 w-16 text-muted-foreground" />}
           title="No Production Files"
           description="Upload your master audio, stems, artwork, contracts, and receipts. All production files are stored securely and can be shared with your team."
           action={{

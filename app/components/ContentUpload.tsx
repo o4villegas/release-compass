@@ -19,12 +19,14 @@ interface ContentUploadProps {
   projectId: string;
   milestoneId?: string;
   onUploadComplete?: (contentId: string) => void;
+  prefilledContentType?: ContentType;
+  prefilledCaptureContext?: string;
 }
 
-export function ContentUpload({ projectId, milestoneId, onUploadComplete }: ContentUploadProps) {
+export function ContentUpload({ projectId, milestoneId, onUploadComplete, prefilledContentType, prefilledCaptureContext }: ContentUploadProps) {
   const [file, setFile] = useState<File | null>(null);
-  const [contentType, setContentType] = useState<ContentType>('photo');
-  const [captureContext, setCaptureContext] = useState('');
+  const [contentType, setContentType] = useState<ContentType>(prefilledContentType || 'photo');
+  const [captureContext, setCaptureContext] = useState(prefilledCaptureContext || '');
   const [captionDraft, setCaptionDraft] = useState('');
   const [intendedPlatforms, setIntendedPlatforms] = useState('');
   const [error, setError] = useState('');
@@ -141,16 +143,16 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
       // Show quota status if available
       if (data.quota_status) {
         if (data.quota_status.quota_met) {
-          setSuccess('✅ Upload successful! All content requirements met for this milestone.');
+          setSuccess('Upload successful! All content requirements met for this milestone.');
         } else {
           const unmetRequirements = data.quota_status.requirements
             .filter((r) => !r.met)
             .map((r) => `${r.content_type.replace('_', ' ')}: ${r.missing} more`)
             .join(', ');
-          setSuccess(`✅ Upload successful! Still needed: ${unmetRequirements}`);
+          setSuccess(`Upload successful! Still needed: ${unmetRequirements}`);
         }
       } else {
-        setSuccess('✅ Upload successful!');
+        setSuccess('Upload successful!');
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -169,24 +171,42 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Content Type */}
-          <div className="space-y-2">
-            <Label htmlFor="content-type">Content Type *</Label>
-            <Select value={contentType} onValueChange={handleContentTypeChange}>
-              <SelectTrigger id="content-type">
-                <SelectValue placeholder="Select content type" />
-              </SelectTrigger>
-              <SelectContent>
-                {CONTENT_TYPES.map((type) => (
-                  <SelectItem key={type.value} value={type.value}>
-                    {type.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Row 1: Content Type + Capture Context */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="content-type">Content Type *</Label>
+              <Select value={contentType} onValueChange={handleContentTypeChange}>
+                <SelectTrigger id="content-type">
+                  <SelectValue placeholder="Select content type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CONTENT_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="capture-context">Capture Context *</Label>
+              <Select value={captureContext} onValueChange={setCaptureContext}>
+                <SelectTrigger id="capture-context">
+                  <SelectValue placeholder="Where was this captured?" />
+                </SelectTrigger>
+                <SelectContent>
+                  {CAPTURE_CONTEXTS.map((context) => (
+                    <SelectItem key={context.value} value={context.value}>
+                      {context.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          {/* File Input */}
+          {/* Row 2: File Input (full width) */}
           <div className="space-y-2">
             <Label htmlFor="file">File *</Label>
             <Input
@@ -208,45 +228,29 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
             )}
           </div>
 
-          {/* Capture Context */}
-          <div className="space-y-2">
-            <Label htmlFor="capture-context">Capture Context *</Label>
-            <Select value={captureContext} onValueChange={setCaptureContext}>
-              <SelectTrigger id="capture-context">
-                <SelectValue placeholder="Where was this captured?" />
-              </SelectTrigger>
-              <SelectContent>
-                {CAPTURE_CONTEXTS.map((context) => (
-                  <SelectItem key={context.value} value={context.value}>
-                    {context.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Row 3: Caption + Platforms */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="caption">Caption Draft (Optional)</Label>
+              <Input
+                id="caption"
+                placeholder="Draft your caption or notes..."
+                value={captionDraft}
+                onChange={(e) => setCaptionDraft(e.target.value)}
+                disabled={uploading}
+              />
+            </div>
 
-          {/* Caption Draft (Optional) */}
-          <div className="space-y-2">
-            <Label htmlFor="caption">Caption Draft (Optional)</Label>
-            <Input
-              id="caption"
-              placeholder="Draft your caption or notes..."
-              value={captionDraft}
-              onChange={(e) => setCaptionDraft(e.target.value)}
-              disabled={uploading}
-            />
-          </div>
-
-          {/* Intended Platforms (Optional) */}
-          <div className="space-y-2">
-            <Label htmlFor="platforms">Intended Platforms (Optional)</Label>
-            <Input
-              id="platforms"
-              placeholder="e.g., Instagram, TikTok, YouTube"
-              value={intendedPlatforms}
-              onChange={(e) => setIntendedPlatforms(e.target.value)}
-              disabled={uploading}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="platforms">Intended Platforms (Optional)</Label>
+              <Input
+                id="platforms"
+                placeholder="e.g., Instagram, TikTok, YouTube"
+                value={intendedPlatforms}
+                onChange={(e) => setIntendedPlatforms(e.target.value)}
+                disabled={uploading}
+              />
+            </div>
           </div>
 
           {/* Upload Progress */}
@@ -274,7 +278,7 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete }: Cont
           )}
 
           {/* Submit Button */}
-          <Button type="submit" disabled={!file || !captureContext || uploading} className="w-full">
+          <Button type="submit" disabled={!file || !captureContext || uploading} className="w-full glow-hover-sm">
             {uploading ? 'Uploading...' : 'Upload Content'}
           </Button>
         </form>

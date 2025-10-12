@@ -85,17 +85,15 @@ test.describe('UI/UX Components Verification (No DB Required)', () => {
     const failedResources: string[] = [];
 
     page.on('response', response => {
-      if (response.status() >= 400 && !response.url().includes('b199c34c')) {
+      if (response.status() >= 400) {
         failedResources.push(`${response.url()} - ${response.status()}`);
       }
     });
 
     await page.goto(PRODUCTION_URL);
 
-    // Filter out expected 404s (demo project)
-    const criticalFailures = failedResources.filter(r => !r.includes('404'));
-
-    expect(criticalFailures).toHaveLength(0);
+    // No 404s should occur now that stale demo project is removed
+    expect(failedResources).toHaveLength(0);
   });
 
   test('CSS styling is applied correctly', async ({ page }) => {

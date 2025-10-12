@@ -11,6 +11,9 @@ import {
 type Bindings = {
   DB: D1Database;
   BUCKET: R2Bucket;
+  R2_ACCESS_KEY_ID: string;
+  R2_SECRET_ACCESS_KEY: string;
+  R2_ACCOUNT_ID: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -175,6 +178,41 @@ app.get('/milestones/:milestoneId/content-status', async (c) => {
   } catch (error) {
     console.error('Error fetching content status:', error);
     return c.json({ error: 'Internal server error' }, 500);
+  }
+});
+
+/**
+ * GET /api/content/:contentId/url
+ * Generate presigned URL for content preview
+ */
+app.get('/content/:contentId/url', async (c) => {
+  try {
+    const { contentId } = c.req.param();
+
+    // Get content metadata
+    const content = await c.env.DB.prepare(`
+      SELECT storage_key FROM content_items WHERE id = ?
+    `).bind(contentId).first();
+
+    if (!content || !content.storage_key) {
+      return c.json({ error: 'Content not found' }, 404);
+    }
+
+    // Generate presigned URL using existing utility
+    const { generateDownloadUrl } = await import('../utils/r2SignedUrls');
+
+    const url = await generateDownloadUrl(
+      content.storage_key as string,
+      'music-release-files', // Bucket name
+      c.env.R2_ACCOUNT_ID,
+      c.env.R2_ACCESS_KEY_ID,
+      c.env.R2_SECRET_ACCESS_KEY
+    );
+
+    return c.json({ url });
+  } catch (error) {
+    console.error('Error generating presigned URL:', error);
+    return c.json({ error: 'Internal server error', message: error instanceof Error ? error.message : 'Unknown error' }, 500);
   }
 });
 

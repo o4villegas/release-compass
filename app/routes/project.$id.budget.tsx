@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '~/components/ui/alert';
 import { Badge } from '~/components/ui/badge';
 import { Progress } from '~/components/ui/progress';
 import { BackButton } from '~/components/BackButton';
+import { BudgetPieChart } from '~/components/BudgetPieChart';
 import { AlertCircle, CheckCircle, Upload, Receipt } from 'lucide-react';
 
 type BudgetCategory = 'production' | 'marketing' | 'content_creation' | 'distribution' | 'admin' | 'contingency';
@@ -237,7 +238,7 @@ export default function ProjectBudget() {
       </div>
 
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">{project.release_title}</h1>
+        <h1 className="text-4xl font-bold">{project.release_title}</h1>
         <p className="text-muted-foreground">Budget Management</p>
       </div>
 
@@ -300,6 +301,15 @@ export default function ProjectBudget() {
         </Card>
       </div>
 
+      {/* Budget Pie Chart */}
+      <div className="mb-6">
+        <BudgetPieChart
+          categoryData={budget.by_category}
+          totalBudget={budget.total_budget}
+          totalSpent={budget.total_spent}
+        />
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Add Budget Item Form */}
         <Card>
@@ -311,22 +321,40 @@ export default function ProjectBudget() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <Select value={category} onValueChange={(v) => setCategory(v as BudgetCategory)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
-                      <SelectItem key={key} value={key}>
-                        {label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              {/* Row 1: Category + Amount */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="category">Category</Label>
+                  <Select value={category} onValueChange={(v) => setCategory(v as BudgetCategory)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="amount">Amount ($)</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    placeholder="0.00"
+                    required
+                  />
+                </div>
               </div>
 
+              {/* Row 2: Description (full width) */}
               <div>
                 <Label htmlFor="description">Description</Label>
                 <Input
@@ -338,20 +366,7 @@ export default function ProjectBudget() {
                 />
               </div>
 
-              <div>
-                <Label htmlFor="amount">Amount ($)</Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
-                  placeholder="0.00"
-                  required
-                />
-              </div>
-
+              {/* Row 3: Receipt (full width) */}
               <div>
                 <Label htmlFor="receipt">Receipt (Required)</Label>
                 <div className="flex items-center gap-2 mt-1">
@@ -390,7 +405,7 @@ export default function ProjectBudget() {
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full glow-hover-sm"
                 disabled={!uploadedReceiptKey || submitting || uploadingReceipt}
               >
                 {submitting ? 'Adding...' : 'Add Budget Item'}

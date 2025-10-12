@@ -110,3 +110,19 @@ export interface ProjectWithMilestones {
   };
   cleared_for_release?: ClearedForReleaseResult;
 }
+
+export interface ProjectSummary {
+  id: string;
+  artist_name: string;
+  release_title: string;
+  release_date: string;
+  release_type: 'single' | 'EP' | 'album';
+  total_budget: number;
+  cleared_for_release: number;
+  created_at: string;
+  // Aggregated stats
+  milestones_total: number;
+  milestones_complete: number;
+  budget_spent: number;
+  content_items_count: number;
+}

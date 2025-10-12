@@ -4,6 +4,7 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Badge } from '~/components/ui/badge';
+import { CheckCircle } from 'lucide-react';
 
 interface Note {
   id: string;
@@ -166,8 +167,8 @@ export function AudioPlayer({
           </div>
           <div className="flex gap-2">
             {notesAcknowledged && (
-              <Badge variant="default" className="bg-primary">
-                ✓ Acknowledged
+              <Badge variant="default" className="bg-primary flex items-center gap-1">
+                <CheckCircle className="h-3 w-3" /> Acknowledged
               </Badge>
             )}
             {canAcknowledge && (

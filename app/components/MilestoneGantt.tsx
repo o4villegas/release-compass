@@ -425,8 +425,8 @@ export function MilestoneGantt({ milestones, releaseDate, projectStartDate }: Mi
                           <div className="text-xs font-medium text-foreground/90 truncate flex items-center gap-2">
                             {milestone.name}
                             {milestone.status !== 'complete' && milestone.quota_status && milestone.quota_status.requirements.length > 0 && (
-                              <span className="text-[10px] opacity-70 font-normal whitespace-nowrap">
-                                {milestone.quota_status.quota_met ? '✓' : `${getQuotaCompletionPercent(milestone)}%`}
+                              <span className="text-[10px] opacity-70 font-normal whitespace-nowrap flex items-center gap-0.5">
+                                {milestone.quota_status.quota_met ? <CheckCircle2 className="w-3 h-3" /> : `${getQuotaCompletionPercent(milestone)}%`}
                               </span>
                             )}
                           </div>
@@ -492,8 +492,8 @@ export function MilestoneGantt({ milestones, releaseDate, projectStartDate }: Mi
                                     <span className="text-gray-300 capitalize">
                                       {req.content_type.replace('_', ' ')}:
                                     </span>
-                                    <span className={req.met ? 'text-green-400' : 'text-yellow-500'}>
-                                      {req.actual}/{req.required} {req.met ? '✓' : ''}
+                                    <span className={req.met ? 'text-green-400 flex items-center gap-1' : 'text-yellow-500'}>
+                                      {req.actual}/{req.required} {req.met && <CheckCircle2 className="w-3 h-3" />}
                                     </span>
                                   </div>
                                 ))}
