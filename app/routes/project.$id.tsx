@@ -104,7 +104,7 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
               <div className="text-sm text-muted-foreground mb-1">Release Date</div>
               <div className="text-2xl font-semibold">{formatDate(project.release_date || '')}</div>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-w-md">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
               <Button asChild variant="outline" size="sm" className="glow-hover-sm">
                 <Link to={`/project/${project.id}/content`} className="flex items-center gap-2">
                   <FileText className="h-4 w-4" />

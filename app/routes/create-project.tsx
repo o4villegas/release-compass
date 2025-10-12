@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Rocket } from 'lucide-react';
+import { Rocket, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -119,8 +119,12 @@ export default function CreateProject() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6 stagger-children">
               {error && (
-                <div className="bg-destructive/10 border border-destructive text-destructive px-4 py-3 rounded">
-                  {error}
+                <div
+                  role="alert"
+                  className="bg-destructive/20 border-2 border-destructive text-destructive-foreground px-4 py-3 rounded-md flex items-center gap-3"
+                >
+                  <AlertTriangle className="h-5 w-5 flex-shrink-0" />
+                  <span>{error}</span>
                 </div>
               )}
 

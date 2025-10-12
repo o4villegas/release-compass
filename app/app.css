@@ -38,6 +38,10 @@
   --color-input: #333333;
   --color-ring: #00ff41;
 
+  /* Popover/Dropdown */
+  --color-popover: #1a1a1a;
+  --color-popover-foreground: #ffffff;
+
   /* Radius */
   --radius: 0.5rem;
 }
