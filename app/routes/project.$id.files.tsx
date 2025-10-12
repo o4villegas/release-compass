@@ -222,7 +222,7 @@ export default function ProjectFiles() {
               <Alert className="border-destructive text-destructive">{error}</Alert>
             )}
 
-            <Button type="submit" disabled={!file || uploading} className="w-full">
+            <Button type="submit" size="lg" disabled={!file || uploading} className="w-full">
               {uploading ? 'Uploading...' : 'Upload File'}
             </Button>
           </form>

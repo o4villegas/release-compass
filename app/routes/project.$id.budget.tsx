@@ -405,7 +405,8 @@ export default function ProjectBudget() {
 
               <Button
                 type="submit"
-                className="w-full glow-hover-sm"
+                size="lg"
+                className="w-full glow-hover-md"
                 disabled={!uploadedReceiptKey || submitting || uploadingReceipt}
               >
                 {submitting ? 'Adding...' : 'Add Budget Item'}

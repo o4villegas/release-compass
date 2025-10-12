@@ -278,7 +278,7 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete, prefil
           )}
 
           {/* Submit Button */}
-          <Button type="submit" disabled={!file || !captureContext || uploading} className="w-full glow-hover-sm">
+          <Button type="submit" size="lg" disabled={!file || !captureContext || uploading} className="w-full glow-hover-md">
             {uploading ? 'Uploading...' : 'Upload Content'}
           </Button>
         </form>

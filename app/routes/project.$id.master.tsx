@@ -538,7 +538,7 @@ export default function ProjectMaster() {
                 </Label>
               </div>
 
-              <Button type="submit" disabled={!isFormComplete || uploading} className="w-full">
+              <Button type="submit" size="lg" disabled={!isFormComplete || uploading} className="w-full">
                 Complete Master Upload
               </Button>
             </form>

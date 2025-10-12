@@ -409,7 +409,7 @@ export default function ProjectTeasers() {
                 </Alert>
               )}
 
-              <Button type="submit" className="w-full" disabled={submitting}>
+              <Button type="submit" size="lg" className="w-full" disabled={submitting}>
                 {submitting ? 'Adding...' : 'Add Teaser Post'}
               </Button>
             </form>
