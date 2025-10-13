@@ -15,7 +15,8 @@ import { BackButton } from '~/components/BackButton';
 import { EmptyState } from '~/components/ui/empty-state';
 import { Folder, CheckCircle, Music } from 'lucide-react';
 
-type FileType = 'master' | 'stems' | 'artwork' | 'contracts' | 'receipts';
+// Note: 'artwork' removed - now uploaded during project creation, not here
+type FileType = 'master' | 'stems' | 'contracts' | 'receipts';
 
 interface FileItem {
   id: string;
@@ -29,7 +30,6 @@ interface FileItem {
 const FILE_SIZE_LIMITS: Record<FileType, number> = {
   master: 100,
   stems: 100,
-  artwork: 10,
   contracts: 10,
   receipts: 10,
 };
@@ -37,7 +37,6 @@ const FILE_SIZE_LIMITS: Record<FileType, number> = {
 const FILE_TYPE_LABELS: Record<FileType, string> = {
   master: 'Master Audio',
   stems: 'Stems',
-  artwork: 'Artwork',
   contracts: 'Contracts',
   receipts: 'Receipts',
 };
@@ -161,8 +160,7 @@ export default function ProjectFiles() {
 
   const masterFiles = files.filter((f) => f.file_type === 'master');
   const stemFiles = files.filter((f) => f.file_type === 'stems');
-  const artworkFiles = files.filter((f) => f.file_type === 'artwork');
-  const otherFiles = files.filter((f) => !['master', 'stems', 'artwork'].includes(f.file_type));
+  const otherFiles = files.filter((f) => !['master', 'stems'].includes(f.file_type));
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -179,7 +177,7 @@ export default function ProjectFiles() {
       <Card>
         <CardHeader>
           <CardTitle>Upload File</CardTitle>
-          <CardDescription>Upload master audio, stems, artwork, or other production files</CardDescription>
+          <CardDescription>Upload master audio, stems, contracts, and receipts. Album artwork is uploaded during project creation.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleUpload} className="space-y-4">
@@ -355,12 +353,12 @@ export default function ProjectFiles() {
         </div>
       )}
 
-      {/* Artwork & Other Files */}
-      {(artworkFiles.length > 0 || otherFiles.length > 0) && (
+      {/* Other Files (Contracts, Receipts) */}
+      {otherFiles.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-2xl font-bold">Other Files</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[...artworkFiles, ...otherFiles].map((fileItem) => (
+            {otherFiles.map((fileItem) => (
               <Card key={fileItem.id}>
                 <CardHeader>
                   <CardTitle className="text-base">
@@ -382,7 +380,7 @@ export default function ProjectFiles() {
         <EmptyState
           icon={<Folder className="h-16 w-16 text-muted-foreground" />}
           title="No Production Files"
-          description="Upload your master audio, stems, artwork, contracts, and receipts. All production files are stored securely and can be shared with your team."
+          description="Upload your master audio, stems, contracts, and receipts. All production files are stored securely and can be shared with your team. Album artwork is uploaded during project creation."
           action={{
             label: "Upload First File",
             to: "#upload-form"
