@@ -21,6 +21,10 @@ export default function CreateProject() {
     total_budget: '',
   });
 
+  const [artworkFile, setArtworkFile] = useState<File | null>(null);
+  const [artworkPreview, setArtworkPreview] = useState<string | null>(null);
+  const [artworkDimensions, setArtworkDimensions] = useState<{ width: number; height: number } | null>(null);
+
   // Get or create user UUID
   const getUserUuid = (): string => {
     let uuid = localStorage.getItem('userUuid');
@@ -29,6 +33,67 @@ export default function CreateProject() {
       localStorage.setItem('userUuid', uuid);
     }
     return uuid;
+  };
+
+  // Handle artwork file selection with validation
+  const handleArtworkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setArtworkFile(null);
+      setArtworkPreview(null);
+      setArtworkDimensions(null);
+      return;
+    }
+
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Artwork must be under 10MB');
+      return;
+    }
+
+    // Validate file type
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      setError('Artwork must be JPG or PNG');
+      return;
+    }
+
+    // Validate dimensions (client-side)
+    const img = new Image();
+    img.onload = () => {
+      // Check minimum dimensions (3000x3000 for high-quality distribution)
+      if (img.width < 3000 || img.height < 3000) {
+        setError('Artwork must be at least 3000x3000 pixels for distribution quality');
+        setArtworkFile(null);
+        setArtworkPreview(null);
+        setArtworkDimensions(null);
+        return;
+      }
+
+      // Check aspect ratio (must be square)
+      const aspectRatio = img.width / img.height;
+      if (Math.abs(aspectRatio - 1) > 0.01) {
+        setError('Artwork must be square (1:1 aspect ratio)');
+        setArtworkFile(null);
+        setArtworkPreview(null);
+        setArtworkDimensions(null);
+        return;
+      }
+
+      // All validations passed
+      setError(null);
+      setArtworkFile(file);
+      setArtworkPreview(img.src);
+      setArtworkDimensions({ width: img.width, height: img.height });
+    };
+
+    img.onerror = () => {
+      setError('Failed to load image. Please try another file.');
+      setArtworkFile(null);
+      setArtworkPreview(null);
+      setArtworkDimensions(null);
+    };
+
+    img.src = URL.createObjectURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,21 +125,25 @@ export default function CreateProject() {
         return;
       }
 
-      const payload: CreateProjectRequest = {
-        artist_name: formData.artist_name,
-        release_title: formData.release_title,
-        release_date: formData.release_date,
-        release_type: formData.release_type,
-        total_budget: budget,
-        user_uuid: getUserUuid(),
-      };
+      // Use FormData to support artwork file upload
+      const formDataPayload = new FormData();
+      formDataPayload.append('artist_name', formData.artist_name);
+      formDataPayload.append('release_title', formData.release_title);
+      formDataPayload.append('release_date', formData.release_date);
+      formDataPayload.append('release_type', formData.release_type);
+      formDataPayload.append('total_budget', budget.toString());
+      formDataPayload.append('user_uuid', getUserUuid());
+
+      // Add artwork if provided
+      if (artworkFile && artworkDimensions) {
+        formDataPayload.append('artwork', artworkFile);
+        formDataPayload.append('artwork_width', artworkDimensions.width.toString());
+        formDataPayload.append('artwork_height', artworkDimensions.height.toString());
+      }
 
       const response = await fetch('/api/projects', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
+        body: formDataPayload, // No Content-Type header - browser sets it with boundary
       });
 
       if (!response.ok) {
@@ -208,6 +277,41 @@ export default function CreateProject() {
                 <p className="text-sm text-muted-foreground">
                   Enter your total project budget in USD
                 </p>
+              </div>
+
+              {/* Row 4: Album Artwork (optional) */}
+              <div className="space-y-2">
+                <Label htmlFor="artwork">Album Artwork (Optional)</Label>
+                <Input
+                  id="artwork"
+                  type="file"
+                  accept="image/jpeg,image/png"
+                  onChange={handleArtworkChange}
+                  className="focus-glow"
+                />
+                <p className="text-sm text-muted-foreground">
+                  JPG or PNG, minimum 3000x3000px, square (1:1), max 10MB
+                </p>
+                {artworkPreview && artworkDimensions && (
+                  <div className="mt-3 p-4 border rounded-lg bg-muted/30">
+                    <div className="flex items-start gap-4">
+                      <img
+                        src={artworkPreview}
+                        alt="Artwork preview"
+                        className="w-32 h-32 rounded-lg object-cover border-2 border-primary/20"
+                      />
+                      <div className="flex-1">
+                        <p className="font-medium text-sm text-foreground">Preview</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {artworkDimensions.width} × {artworkDimensions.height}px
+                        </p>
+                        <p className="text-xs text-green-600 mt-1">
+                          ✓ Artwork meets distribution requirements
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="flex gap-4">

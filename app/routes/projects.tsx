@@ -100,28 +100,49 @@ export default function Projects() {
             : 0;
 
           return (
-            <Card key={project.id} className="hover:border-primary transition-colors">
-              <CardHeader>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-xl truncate">
-                      {project.release_title}
-                    </CardTitle>
-                    <CardDescription className="truncate">
-                      {project.artist_name}
-                    </CardDescription>
-                  </div>
-                  <div className="flex flex-col gap-1 items-end flex-shrink-0">
-                    <Badge variant="outline" className="capitalize">
+            <Card key={project.id} className="hover:border-primary transition-colors overflow-hidden">
+              {/* Artwork Header */}
+              {project.artwork_url ? (
+                <div className="relative w-full aspect-square bg-muted">
+                  <img
+                    src={project.artwork_url}
+                    alt={`${project.release_title} artwork`}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-3 right-3 flex flex-col gap-1">
+                    <Badge variant="outline" className="capitalize bg-background/80 backdrop-blur-sm">
                       {project.release_type}
                     </Badge>
                     {project.cleared_for_release === 1 && (
-                      <Badge variant="default" className="flex items-center gap-1">
+                      <Badge variant="default" className="flex items-center gap-1 bg-background/80 backdrop-blur-sm">
                         <CheckCircle className="h-3 w-3" /> Cleared
                       </Badge>
                     )}
                   </div>
                 </div>
+              ) : (
+                <div className="relative w-full aspect-square bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                  <Music className="h-16 w-16 text-muted-foreground/40" />
+                  <div className="absolute top-3 right-3 flex flex-col gap-1">
+                    <Badge variant="outline" className="capitalize bg-background/80 backdrop-blur-sm">
+                      {project.release_type}
+                    </Badge>
+                    {project.cleared_for_release === 1 && (
+                      <Badge variant="default" className="flex items-center gap-1 bg-background/80 backdrop-blur-sm">
+                        <CheckCircle className="h-3 w-3" /> Cleared
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <CardHeader>
+                <CardTitle className="text-xl truncate">
+                  {project.release_title}
+                </CardTitle>
+                <CardDescription className="truncate">
+                  {project.artist_name}
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 {/* Release Date */}

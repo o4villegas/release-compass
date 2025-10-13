@@ -217,6 +217,67 @@ app.get('/content/:contentId/url', async (c) => {
 });
 
 /**
+ * PATCH /api/content/:id
+ * Update content item (primarily for milestone reassignment)
+ */
+app.patch('/content/:id', async (c) => {
+  try {
+    const { id } = c.req.param();
+    const body = await c.req.json();
+
+    // Validate content exists
+    const existingContent = await c.env.DB.prepare(`
+      SELECT id, project_id, milestone_id FROM content_items WHERE id = ?
+    `).bind(id).first();
+
+    if (!existingContent) {
+      return c.json({ error: 'Content not found' }, 404);
+    }
+
+    // Validate milestone_id if provided
+    if (body.milestone_id !== undefined && body.milestone_id !== null) {
+      const milestone = await c.env.DB.prepare(`
+        SELECT id, project_id FROM milestones WHERE id = ?
+      `).bind(body.milestone_id).first();
+
+      if (!milestone) {
+        return c.json({ error: 'Milestone not found' }, 404);
+      }
+
+      // Ensure milestone belongs to same project
+      if (milestone.project_id !== existingContent.project_id) {
+        return c.json({ error: 'Milestone does not belong to the same project' }, 400);
+      }
+    }
+
+    // Update milestone_id
+    await c.env.DB.prepare(`
+      UPDATE content_items SET milestone_id = ? WHERE id = ?
+    `).bind(body.milestone_id || null, id).run();
+
+    // Get updated quota status for the old milestone
+    const oldQuotaStatus = existingContent.milestone_id
+      ? await getQuotaStatus(c.env.DB, existingContent.milestone_id as string)
+      : null;
+
+    // Get updated quota status for the new milestone
+    const newQuotaStatus = body.milestone_id
+      ? await getQuotaStatus(c.env.DB, body.milestone_id)
+      : null;
+
+    return c.json({
+      success: true,
+      content_id: id,
+      old_milestone_quota: oldQuotaStatus,
+      new_milestone_quota: newQuotaStatus,
+    });
+  } catch (error) {
+    console.error('Error updating content:', error);
+    return c.json({ error: 'Internal server error', message: error instanceof Error ? error.message : 'Unknown error' }, 500);
+  }
+});
+
+/**
  * Helper function to get quota status for a milestone
  */
 async function getQuotaStatus(db: D1Database, milestoneId: string) {

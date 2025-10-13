@@ -102,17 +102,14 @@ export async function checkClearedForRelease(
     }
   }
 
-  // 3. Check artwork file
-  const artworkFile = await db.prepare(`
-    SELECT id FROM files
-    WHERE project_id = ? AND file_type = 'artwork'
-    ORDER BY uploaded_at DESC
-    LIMIT 1
+  // 3. Check artwork (now stored in projects table)
+  const projectArtwork = await db.prepare(`
+    SELECT artwork_storage_key FROM projects WHERE id = ?
   `).bind(projectId).first();
 
-  if (!artworkFile) {
-    missingFiles.push('Artwork file');
-    reasons.push('Artwork file not uploaded');
+  if (!projectArtwork || !projectArtwork.artwork_storage_key) {
+    missingFiles.push('Artwork');
+    reasons.push('Album artwork not uploaded');
   }
 
   // 4. Check contract file

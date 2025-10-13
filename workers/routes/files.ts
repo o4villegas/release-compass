@@ -12,20 +12,21 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>();
 
 // File type validation
-const FILE_TYPES = ['master', 'stems', 'artwork', 'contracts', 'receipts'] as const;
+// Note: 'artwork' removed - now stored in projects table, not files table
+const FILE_TYPES = ['master', 'stems', 'contracts', 'receipts'] as const;
 type FileType = typeof FILE_TYPES[number];
 
 const FILE_SIZE_LIMITS: Record<FileType, number> = {
   master: 100 * 1024 * 1024, // 100MB
   stems: 100 * 1024 * 1024, // 100MB
-  artwork: 10 * 1024 * 1024, // 10MB
   contracts: 10 * 1024 * 1024, // 10MB
   receipts: 10 * 1024 * 1024, // 10MB
 };
 
 /**
  * POST /api/files/upload
- * Upload master audio, stems, artwork, or other files to R2
+ * Upload master audio, stems, contracts, receipts to R2
+ * Note: Album artwork now uploaded during project creation, not here
  */
 app.post('/files/upload', async (c) => {
   try {

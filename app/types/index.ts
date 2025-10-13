@@ -8,6 +8,9 @@ export interface Project {
   release_type: 'single' | 'EP' | 'album';
   total_budget: number;
   cleared_for_release: number; // 0 or 1 (SQLite boolean)
+  artwork_storage_key: string | null;
+  artwork_width: number | null;
+  artwork_height: number | null;
   created_at: string;
   created_by: string;
 }
@@ -83,6 +86,10 @@ export interface CreateProjectRequest {
   release_type: 'single' | 'EP' | 'album';
   total_budget: number;
   user_uuid: string;
+  // Artwork uploaded as FormData (file + dimensions)
+  artwork?: File;
+  artwork_width?: number;
+  artwork_height?: number;
 }
 
 export interface CreateProjectResponse {
@@ -119,6 +126,10 @@ export interface ProjectSummary {
   release_type: 'single' | 'EP' | 'album';
   total_budget: number;
   cleared_for_release: number;
+  artwork_storage_key: string | null;
+  artwork_width: number | null;
+  artwork_height: number | null;
+  artwork_url?: string | null; // Presigned download URL (generated dynamically)
   created_at: string;
   // Aggregated stats
   milestones_total: number;

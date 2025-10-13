@@ -5,6 +5,9 @@ import { checkClearedForRelease } from '../utils/clearedForRelease';
 type Bindings = {
   DB: D1Database;
   BUCKET: R2Bucket;
+  R2_ACCESS_KEY_ID: string;
+  R2_SECRET_ACCESS_KEY: string;
+  R2_ACCOUNT_ID: string;
 };
 
 const app = new Hono<{ Bindings: Bindings }>();
@@ -23,7 +26,11 @@ app.get('/projects', async (c) => {
 
     // Use extracted handler function
     const { getAllProjects } = await import('../api-handlers/projects');
-    const data = await getAllProjects(c.env.DB, userUuid);
+    const data = await getAllProjects(c.env.DB, userUuid, {
+      accountId: c.env.R2_ACCOUNT_ID,
+      accessKeyId: c.env.R2_ACCESS_KEY_ID,
+      secretAccessKey: c.env.R2_SECRET_ACCESS_KEY,
+    });
 
     return c.json(data.projects);
   } catch (error) {
@@ -38,8 +45,17 @@ app.get('/projects', async (c) => {
  */
 app.post('/projects', async (c) => {
   try {
-    const body = await c.req.json();
-    const { artist_name, release_title, release_date, release_type, total_budget, user_uuid } = body;
+    // Parse FormData (supports both artwork file upload and text fields)
+    const body = await c.req.parseBody();
+    const artist_name = body.artist_name as string;
+    const release_title = body.release_title as string;
+    const release_date = body.release_date as string;
+    const release_type = body.release_type as string;
+    const total_budget = parseFloat(body.total_budget as string);
+    const user_uuid = body.user_uuid as string;
+    const artwork = body.artwork as File | undefined;
+    const artwork_width = body.artwork_width ? parseInt(body.artwork_width as string) : null;
+    const artwork_height = body.artwork_height ? parseInt(body.artwork_height as string) : null;
 
     // Validate required fields
     if (!artist_name || !release_title || !release_date || !release_type || !total_budget || !user_uuid) {
@@ -70,10 +86,36 @@ app.post('/projects', async (c) => {
     const projectId = crypto.randomUUID();
     const createdAt = new Date().toISOString();
 
-    // Insert project
+    // Handle artwork upload if provided
+    let artworkStorageKey: string | null = null;
+    if (artwork) {
+      // Validate artwork file size (10MB limit)
+      if (artwork.size > 10 * 1024 * 1024) {
+        return c.json({ error: 'Artwork file must be under 10MB' }, 413);
+      }
+
+      // Validate artwork file type
+      if (!['image/jpeg', 'image/png'].includes(artwork.type)) {
+        return c.json({ error: 'Artwork must be JPG or PNG' }, 415);
+      }
+
+      // Generate storage key
+      const timestamp = Date.now();
+      const fileExtension = artwork.name.split('.').pop() || 'jpg';
+      artworkStorageKey = `${projectId}/artwork/${timestamp}-${crypto.randomUUID()}.${fileExtension}`;
+
+      // Upload to R2
+      await c.env.BUCKET.put(artworkStorageKey, artwork.stream(), {
+        httpMetadata: {
+          contentType: artwork.type,
+        },
+      });
+    }
+
+    // Insert project with artwork fields
     await c.env.DB.prepare(`
-      INSERT INTO projects (id, artist_name, release_title, release_date, release_type, total_budget, created_at, created_by)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO projects (id, artist_name, release_title, release_date, release_type, total_budget, artwork_storage_key, artwork_width, artwork_height, created_at, created_by)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       projectId,
       artist_name,
@@ -81,6 +123,9 @@ app.post('/projects', async (c) => {
       release_date,
       release_type,
       total_budget,
+      artworkStorageKey,
+      artwork_width,
+      artwork_height,
       createdAt,
       user_uuid
     ).run();

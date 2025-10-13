@@ -1,5 +1,6 @@
 // Extracted business logic for projects
 import { checkClearedForRelease } from '../utils/clearedForRelease';
+import { generateDownloadUrl } from '../utils/r2SignedUrls';
 
 /**
  * Helper function to get quota status for a milestone
@@ -60,7 +61,15 @@ async function getQuotaStatus(db: D1Database, milestoneId: string) {
 /**
  * Get all projects for a user with aggregated stats
  */
-export async function getAllProjects(db: D1Database, userUuid: string) {
+export async function getAllProjects(
+  db: D1Database,
+  userUuid: string,
+  r2Config?: {
+    accountId: string;
+    accessKeyId: string;
+    secretAccessKey: string;
+  }
+) {
   // Fetch all projects for this user
   const projects = await db.prepare(`
     SELECT * FROM projects
@@ -100,8 +109,28 @@ export async function getAllProjects(db: D1Database, userUuid: string) {
         WHERE project_id = ?
       `).bind(projectId).first();
 
+      // Generate presigned URL for artwork if it exists
+      let artworkUrl: string | null = null;
+      const artworkStorageKey = (project as { artwork_storage_key?: string | null }).artwork_storage_key;
+
+      if (artworkStorageKey && r2Config) {
+        try {
+          artworkUrl = await generateDownloadUrl(
+            artworkStorageKey,
+            'music-release-files',
+            r2Config.accountId,
+            r2Config.accessKeyId,
+            r2Config.secretAccessKey
+          );
+        } catch (error) {
+          console.error('Error generating artwork URL:', error);
+          // Continue without artwork URL rather than failing the entire request
+        }
+      }
+
       return {
         ...project,
+        artwork_url: artworkUrl,
         milestones_total: (milestonesCount?.total as number) || 0,
         milestones_complete: (milestonesCount?.complete as number) || 0,
         budget_spent: (budgetSpent?.total as number) || 0,

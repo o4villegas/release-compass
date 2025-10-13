@@ -97,14 +97,21 @@ npm run preview           # Preview production build locally
 npm run test              # Run Vitest unit tests
 npm run test:ui           # Run Vitest with interactive UI
 npm run test:coverage     # Generate test coverage report
-npm run test:e2e          # Run Playwright end-to-end tests
+npm run test:e2e          # Run Playwright end-to-end tests (local dev server)
 npm run test:e2e:ui       # Run Playwright tests with interactive UI
+```
+
+**Production Testing:**
+```bash
+# Test against deployed production app using playwright.config.production.ts
+npx playwright test --config=playwright.config.production.ts
 ```
 
 **Test Organization:**
 - Unit tests: Located alongside source files (if present)
 - E2E tests: `tests/e2e/*.spec.ts` - Testing full user workflows
 - E2E tests use Playwright to verify critical paths like content quota enforcement, milestone completion blocking, and cleared-for-release validation
+- Production verification tests: `tests/e2e/phase2-production-*.spec.ts` - Test deployed app on Cloudflare Workers
 
 ### Cloudflare Resource Management
 ```bash
@@ -541,9 +548,18 @@ Located in `tests/e2e/*.spec.ts`, covering critical user workflows:
 
 Run tests with:
 ```bash
-npm run test:e2e          # Headless mode
-npm run test:e2e:ui       # Interactive UI mode
+npm run test:e2e          # Headless mode (local dev server)
+npm run test:e2e:ui       # Interactive UI mode (local dev server)
+
+# Production verification (tests deployed app)
+npx playwright test --config=playwright.config.production.ts
 ```
+
+**Production Testing:**
+- `playwright.config.production.ts` - Config for testing deployed app at `https://release-compass.lando555.workers.dev`
+- `tests/e2e/phase2-production-simple.spec.ts` - Simplified production verification tests
+- `tests/e2e/phase2-production-verification.spec.ts` - Comprehensive UI/UX verification after deployments
+- Production tests verify badge visibility, button sizing, focus indicators, and page loads
 
 ### Manual Test Workflows
 1. Create project → auto-generates milestones with quotas ✓
