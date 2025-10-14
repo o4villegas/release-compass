@@ -3,20 +3,20 @@ import type { Route } from "./+types/project.$id.timeline";
 import { BackButton } from "~/components/BackButton";
 import { EmptyState } from "~/components/ui/empty-state";
 import { GanttChart } from "lucide-react";
-import {
-  GanttProvider,
-  GanttSidebar,
-  GanttSidebarGroup,
-  GanttSidebarItem,
-  GanttTimeline,
-  GanttHeader,
-  GanttFeatureList,
-  GanttFeatureListGroup,
-  GanttFeatureRow,
-  GanttToday,
-  type GanttFeature,
-} from "~/components/ui/gantt/index.client";
-import { useState } from "react";
+import { useState, lazy, Suspense, useEffect } from "react";
+import type { GanttFeature } from "~/components/ui/gantt/index.client";
+
+// Lazy load Gantt components (client-only, not SSR-safe)
+const GanttProvider = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttProvider })));
+const GanttSidebar = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttSidebar })));
+const GanttSidebarGroup = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttSidebarGroup })));
+const GanttSidebarItem = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttSidebarItem })));
+const GanttTimeline = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttTimeline })));
+const GanttHeader = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttHeader })));
+const GanttFeatureList = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttFeatureList })));
+const GanttFeatureListGroup = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttFeatureListGroup })));
+const GanttFeatureRow = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttFeatureRow })));
+const GanttToday = lazy(() => import("~/components/ui/gantt/index.client").then(m => ({ default: m.GanttToday })));
 
 // Milestone data type from API
 type Milestone = {
@@ -126,6 +126,12 @@ function getQuotaPercent(milestone: Milestone): number {
 export default function ProjectTimeline({ loaderData }: Route.ComponentProps) {
   const { project, milestones } = loaderData;
   const navigation = useNavigation();
+  const [isClient, setIsClient] = useState(false);
+
+  // Detect client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Show loading skeleton during navigation
   if (navigation.state === "loading") {
@@ -190,64 +196,82 @@ export default function ProjectTimeline({ loaderData }: Route.ComponentProps) {
 
       {/* Gantt Chart */}
       <div className="flex-1 overflow-hidden p-4">
-        <GanttProvider range="monthly" zoom={100}>
-          <GanttSidebar>
-            <GanttSidebarGroup name="Production Milestones (Read-Only)">
-              {ganttFeatures.map((feature) => (
-                <GanttSidebarItem
-                  key={feature.id}
-                  feature={feature}
-                  onSelectItem={() => {}}
-                />
-              ))}
-            </GanttSidebarGroup>
-          </GanttSidebar>
+        {isClient ? (
+          <Suspense fallback={
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center">
+                <div className="h-12 w-12 mx-auto mb-4 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                <p className="text-sm text-muted-foreground">Loading timeline...</p>
+              </div>
+            </div>
+          }>
+            <GanttProvider range="monthly" zoom={100}>
+              <GanttSidebar>
+                <GanttSidebarGroup name="Production Milestones (Read-Only)">
+                  {ganttFeatures.map((feature) => (
+                    <GanttSidebarItem
+                      key={feature.id}
+                      feature={feature}
+                      onSelectItem={() => {}}
+                    />
+                  ))}
+                </GanttSidebarGroup>
+              </GanttSidebar>
 
-          <GanttTimeline>
-            <GanttHeader />
-            <GanttFeatureList>
-              <GanttFeatureListGroup>
-                <GanttFeatureRow
-                  features={ganttFeatures}
-                  onMove={undefined}
-                >
-                  {(feature) => {
-                    // Find original milestone for quota data
-                    const milestone = (milestones as unknown as Milestone[]).find((m: Milestone) => m.id === feature.id);
-                    const quotaPercent = milestone ? getQuotaPercent(milestone) : 100;
-                    const quotaMet = milestone?.quota_status?.quota_met ?? true;
+              <GanttTimeline>
+                <GanttHeader />
+                <GanttFeatureList>
+                  <GanttFeatureListGroup>
+                    <GanttFeatureRow
+                      features={ganttFeatures}
+                      onMove={undefined}
+                    >
+                      {(feature) => {
+                        // Find original milestone for quota data
+                        const milestone = (milestones as unknown as Milestone[]).find((m: Milestone) => m.id === feature.id);
+                        const quotaPercent = milestone ? getQuotaPercent(milestone) : 100;
+                        const quotaMet = milestone?.quota_status?.quota_met ?? true;
 
-                    return (
-                      <div className="flex w-full items-center gap-2">
-                        <p className="flex-1 truncate text-xs font-medium">
-                          {feature.name}
-                        </p>
-                        {/* Quota progress bar */}
-                        <div className="h-2 w-20 shrink-0 overflow-hidden rounded-full bg-secondary">
-                          <div
-                            className={`h-full rounded-full transition-all ${
-                              quotaMet
-                                ? "bg-green-500"
-                                : quotaPercent < 50
-                                  ? "bg-red-500"
-                                  : "bg-yellow-500"
-                            }`}
-                            style={{ width: `${quotaPercent}%` }}
-                          />
-                        </div>
-                        {/* Quota percentage label */}
-                        <span className="shrink-0 text-xs text-muted-foreground">
-                          {quotaPercent}%
-                        </span>
-                      </div>
-                    );
-                  }}
-                </GanttFeatureRow>
-              </GanttFeatureListGroup>
-            </GanttFeatureList>
-            <GanttToday />
-          </GanttTimeline>
-        </GanttProvider>
+                        return (
+                          <div className="flex w-full items-center gap-2">
+                            <p className="flex-1 truncate text-xs font-medium">
+                              {feature.name}
+                            </p>
+                            {/* Quota progress bar */}
+                            <div className="h-2 w-20 shrink-0 overflow-hidden rounded-full bg-secondary">
+                              <div
+                                className={`h-full rounded-full transition-all ${
+                                  quotaMet
+                                    ? "bg-green-500"
+                                    : quotaPercent < 50
+                                      ? "bg-red-500"
+                                      : "bg-yellow-500"
+                                }`}
+                                style={{ width: `${quotaPercent}%` }}
+                              />
+                            </div>
+                            {/* Quota percentage label */}
+                            <span className="shrink-0 text-xs text-muted-foreground">
+                              {quotaPercent}%
+                            </span>
+                          </div>
+                        );
+                      }}
+                    </GanttFeatureRow>
+                  </GanttFeatureListGroup>
+                </GanttFeatureList>
+                <GanttToday />
+              </GanttTimeline>
+            </GanttProvider>
+          </Suspense>
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <div className="text-center">
+              <div className="h-12 w-12 mx-auto mb-4 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+              <p className="text-sm text-muted-foreground">Loading timeline...</p>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Legend */}
