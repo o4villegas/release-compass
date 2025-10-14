@@ -44,6 +44,32 @@
 
   /* Radius */
   --radius: 0.5rem;
+
+  /* ========================================
+     STUDIO WORKSPACE COLORS
+     DAW-inspired dark theme
+     ======================================== */
+
+  /* Studio Background Hierarchy */
+  --color-studio-background: #0a0a0a;    /* Deepest background */
+  --color-studio-sidebar: #141414;       /* Left sidebar */
+  --color-studio-canvas: #0f0f0f;        /* Main content area */
+  --color-studio-inspector: #141414;     /* Right inspector */
+
+  /* Studio Interactive States */
+  --color-studio-hover: #1f1f1f;         /* Hover state for nav items */
+  --color-studio-active: #262626;        /* Active/selected state */
+  --color-studio-active-foreground: #ffffff;
+
+  /* Studio Typography */
+  --color-studio-foreground: #e5e5e5;
+  --color-studio-muted-foreground: #8a8a8a;
+
+  /* Studio Borders & Dividers */
+  --color-studio-border: #1f1f1f;
+
+  /* Studio Accent (Neon Green for highlights) */
+  --color-studio-accent: #00ff41;
 }
 
 html,
@@ -111,15 +137,23 @@ body {
 }
 
 /* Hover Glow Variants */
+.glow-hover-sm {
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .glow-hover-sm:hover {
-  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
-  transition: box-shadow 200ms ease-in-out;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.4),
+              0 0 30px rgba(0, 255, 65, 0.2);
+}
+
+.glow-hover-md {
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glow-hover-md:hover {
-  box-shadow: 0 0 20px rgba(0, 255, 65, 0.4),
-              0 0 40px rgba(0, 255, 65, 0.2);
-  transition: box-shadow 200ms ease-in-out;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.5),
+              0 0 40px rgba(0, 255, 65, 0.3),
+              0 0 60px rgba(0, 255, 65, 0.15);
 }
 
 /* Secondary Glow (Neon Yellow) */
@@ -152,6 +186,22 @@ body {
 
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Neon Pulse Animation for Loading States */
+@keyframes neon-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.4);
+  }
+}
+
+.animate-neon-pulse {
+  animation: neon-pulse 1.5s ease-in-out infinite;
 }
 
 /* Layout Transition Animations */
@@ -189,20 +239,20 @@ body {
 }
 
 .animate-slide-in-right {
-  animation: slide-in-right 300ms ease-out;
+  animation: slide-in-right 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animate-slide-in-left {
-  animation: slide-in-left 300ms ease-out;
+  animation: slide-in-left 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .animate-scale-in {
-  animation: scale-in 200ms ease-out;
+  animation: scale-in 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Stagger Children Utility */
 .stagger-children > * {
-  animation: fadeInUp 400ms ease-out;
+  animation: scale-in 300ms cubic-bezier(0.4, 0, 0.2, 1);
   animation-fill-mode: both;
 }
 
@@ -211,7 +261,6 @@ body {
 .stagger-children > *:nth-child(3) { animation-delay: 100ms; }
 .stagger-children > *:nth-child(4) { animation-delay: 150ms; }
 .stagger-children > *:nth-child(5) { animation-delay: 200ms; }
-.stagger-children > *:nth-child(6) { animation-delay: 250ms; }
 
 /* Layout Transition Base Classes */
 .transition-layout {
@@ -227,6 +276,33 @@ body {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 255, 65, 0.3),
               0 0 15px rgba(0, 255, 65, 0.2);
+}
+
+/* Global Focus Styles - Neon Theme */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 255, 65, 0.1),
+              0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+/* Enhanced Button & Link Focus */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 255, 65, 0.1),
+              0 0 15px rgba(0, 255, 65, 0.4);
+}
+
+/* Input Focus States */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 255, 65, 0.1),
+              0 0 10px rgba(0, 255, 65, 0.2);
 }
 
 /* Reduced Motion Support */

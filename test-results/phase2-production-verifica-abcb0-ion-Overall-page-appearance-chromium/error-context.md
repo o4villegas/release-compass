@@ -1,0 +1,531 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "Release Compass" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Release Compass" [ref=e6]
+      - button [ref=e7]:
+        - img
+    - navigation [ref=e8]:
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d
+        - img [ref=e10]
+        - generic [ref=e15]: Dashboard
+      - link "Content Library" [ref=e16] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/content
+        - img [ref=e17]
+        - generic [ref=e19]: Content Library
+      - link "Calendar" [ref=e20] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/calendar
+        - img [ref=e21]
+        - generic [ref=e23]: Calendar
+      - link "Budget" [ref=e24] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/budget
+        - img [ref=e25]
+        - generic [ref=e27]: Budget
+      - link "Master Upload" [ref=e28] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/master
+        - img [ref=e29]
+        - generic [ref=e32]: Master Upload
+      - link "Production Files" [ref=e33] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/files
+        - img [ref=e34]
+        - generic [ref=e38]: Production Files
+      - link "Teasers" [ref=e39] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/teasers
+        - img [ref=e40]
+        - generic [ref=e43]: Teasers
+    - link "All Projects" [ref=e45] [cursor=pointer]:
+      - /url: /projects
+      - img [ref=e46]
+      - generic [ref=e51]: All Projects
+  - main [ref=e52]:
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - link "Back to Home" [ref=e58] [cursor=pointer]:
+            - /url: /
+            - img
+            - text: Back to Home
+          - heading "Test Album" [level=1] [ref=e59]
+          - paragraph [ref=e60]: Implementation Test · album
+        - generic [ref=e61]:
+          - generic [ref=e62]:
+            - generic [ref=e63]: Release Date
+            - generic [ref=e64]: June 14, 2026
+          - generic [ref=e65]:
+            - link "Content" [ref=e66] [cursor=pointer]:
+              - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/content
+              - img
+              - text: Content
+            - link "Budget" [ref=e67] [cursor=pointer]:
+              - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/budget
+              - img
+              - text: Budget
+            - link "Files" [ref=e68] [cursor=pointer]:
+              - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/files
+              - img
+              - text: Files
+            - link "Calendar" [ref=e69] [cursor=pointer]:
+              - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/calendar
+              - img
+              - text: Calendar
+            - link "Teasers" [ref=e70] [cursor=pointer]:
+              - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/teasers
+              - img
+              - text: Teasers
+            - link "Master" [ref=e71] [cursor=pointer]:
+              - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/master
+              - img
+              - text: Master
+      - button "4 Actions Required 3 High Click to view details 4" [ref=e73]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - img [ref=e78]
+            - generic [ref=e80]:
+              - generic [ref=e81]:
+                - heading "4 Actions Required" [level=3] [ref=e82]
+                - generic [ref=e83]: 3 High
+              - paragraph [ref=e84]: Click to view details
+          - generic [ref=e85]:
+            - generic [ref=e86]: "4"
+            - img [ref=e87]
+      - generic [ref=e89]:
+        - generic [ref=e90]:
+          - generic [ref=e91]:
+            - generic [ref=e92]: Project Progress
+            - generic [ref=e93]: 5 of 11 milestones complete
+          - generic [ref=e95]:
+            - progressbar [ref=e96]
+            - generic [ref=e98]: 45%
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e101]: Budget
+            - generic [ref=e102]: Total allocated budget
+          - generic [ref=e104]:
+            - generic [ref=e105]: $50,000
+            - progressbar [ref=e106]
+            - generic [ref=e108]: $17,300 spent · $32,700 remaining
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - generic [ref=e111]: Cleared for Release
+            - generic [ref=e112]: Release readiness status
+          - generic [ref=e114]:
+            - generic [ref=e115]:
+              - img [ref=e116]
+              - text: NOT CLEARED
+            - generic [ref=e120]:
+              - paragraph [ref=e121]: "Missing Requirements:"
+              - list [ref=e122]:
+                - listitem [ref=e123]: "• 6 milestone(s) incomplete: Marketing Campaign Launch, Pre-Save Campaign Active, Release Day, Spotify Playlist Submission, Teaser Content Released, Upload to Distributor"
+                - listitem [ref=e124]: • Album artwork not uploaded
+        - generic [ref=e125]:
+          - generic [ref=e127]:
+            - generic [ref=e128]:
+              - generic [ref=e129]: Content Quotas
+              - generic [ref=e130]: 0 of 2 requirements met
+            - generic [ref=e131]: 0%
+          - generic [ref=e132]:
+            - progressbar [ref=e133]
+            - generic [ref=e135]:
+              - generic [ref=e137]: "Next: Marketing Campaign Launch"
+              - generic [ref=e138]:
+                - generic [ref=e139]: "• short video: 6 more needed"
+                - generic [ref=e140]: "• photo: 15 more needed"
+            - link "Upload Content" [ref=e141] [cursor=pointer]:
+              - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/content
+      - generic [ref=e144]:
+        - generic [ref=e145]:
+          - generic [ref=e146]: Critical Path
+          - generic [ref=e147]: "3"
+          - generic [ref=e148]: Blocking milestones remaining
+        - generic [ref=e149]:
+          - generic [ref=e150]: Time to Release
+          - generic [ref=e151]: 244 days
+          - generic [ref=e152]:
+            - img [ref=e153]
+            - text: On track
+        - generic [ref=e156]:
+          - generic [ref=e157]: Next Deadline
+          - generic [ref=e158]: May 15, 2026
+          - generic [ref=e159]: Upload to Distributor
+        - generic [ref=e160]:
+          - generic [ref=e161]: Overall Progress
+          - generic [ref=e162]: 45%
+          - generic [ref=e163]: 5 of 11 milestones
+      - generic [ref=e165]:
+        - generic [ref=e166]:
+          - generic [ref=e167]:
+            - img [ref=e168]
+            - generic [ref=e170]: "Filter:"
+            - generic [ref=e171]:
+              - button "All (11)" [ref=e172]
+              - button "Blocking (4)" [ref=e173]
+              - button "Incomplete (6)" [ref=e174]
+              - button "Overdue (0)" [ref=e175]
+          - generic [ref=e176]:
+            - img [ref=e177]
+            - generic [ref=e180]: "Zoom:"
+            - generic [ref=e181]:
+              - button "This Month" [ref=e182]
+              - button "30 Days" [ref=e183]
+              - button "60 Days" [ref=e184]
+              - button "All" [ref=e185]
+        - generic [ref=e186]:
+          - generic [ref=e187]:
+            - heading "Release Timeline" [level=3] [ref=e188]
+            - paragraph [ref=e189]: Oct 8, 2025 → Jun 14, 2026
+          - generic [ref=e191]: Showing 11 of 11 milestones
+        - generic [ref=e192]:
+          - generic [ref=e193]:
+            - generic [ref=e197]: Nov
+            - generic [ref=e200]: Dec
+            - generic [ref=e203]: Jan
+            - generic [ref=e206]: Feb
+            - generic [ref=e209]: Mar
+            - generic [ref=e212]: Apr
+            - generic [ref=e215]: May
+            - generic [ref=e218]: Jun
+          - generic [ref=e220]:
+            - 'link "Recording Complete Due: Mar 16, 2026 Recording Complete" [ref=e221] [cursor=pointer]':
+              - /url: /milestone/d3efdf2d-d816-4e70-b605-63e9e4079802
+              - generic [ref=e222]:
+                - generic [ref=e224]:
+                  - img [ref=e225]
+                  - generic [ref=e228]:
+                    - generic [ref=e229]: Recording Complete
+                    - generic [ref=e230]: "Due: Mar 16, 2026"
+                - generic [ref=e235]: Recording Complete
+            - 'link "Mixing Complete Due: Apr 15, 2026 Mixing Complete" [ref=e236] [cursor=pointer]':
+              - /url: /milestone/edc7fafc-2f76-4027-8ca4-a6eaf731149f
+              - generic [ref=e237]:
+                - generic [ref=e239]:
+                  - img [ref=e240]
+                  - generic [ref=e243]:
+                    - generic [ref=e244]: Mixing Complete
+                    - generic [ref=e245]: "Due: Apr 15, 2026"
+                - generic [ref=e249]: Mixing Complete
+            - 'link "Mastering Complete Due: Apr 30, 2026 Mastering Complete" [ref=e250] [cursor=pointer]':
+              - /url: /milestone/810f413b-82fc-456c-8a8b-9d968eba2361
+              - generic [ref=e251]:
+                - generic [ref=e253]:
+                  - img [ref=e254]
+                  - generic [ref=e257]:
+                    - generic [ref=e258]: Mastering Complete
+                    - generic [ref=e259]: "Due: Apr 30, 2026"
+                - generic [ref=e263]: Mastering Complete
+            - 'link "Metadata Tagging Complete Due: May 10, 2026 Metadata Tagging Complete Required" [ref=e264] [cursor=pointer]':
+              - /url: /milestone/ca29a74e-b90c-489c-afc3-732a8df37b28
+              - generic [ref=e265]:
+                - generic [ref=e267]:
+                  - img [ref=e268]
+                  - generic [ref=e271]:
+                    - generic [ref=e272]: Metadata Tagging Complete
+                    - generic [ref=e273]: "Due: May 10, 2026"
+                - generic [ref=e276]:
+                  - generic: Metadata Tagging Complete
+                  - generic [ref=e277]: Required
+            - 'link "Artwork Finalized Due: May 15, 2026 Artwork Finalized" [ref=e278] [cursor=pointer]':
+              - /url: /milestone/5adde397-bc25-4ec1-b832-582add6777f2
+              - generic [ref=e279]:
+                - generic [ref=e281]:
+                  - img [ref=e282]
+                  - generic [ref=e285]:
+                    - generic [ref=e286]: Artwork Finalized
+                    - generic [ref=e287]: "Due: May 15, 2026"
+                - generic [ref=e290]:
+                  - generic: Artwork Finalized
+            - 'link "Upload to Distributor Due: May 15, 2026 Upload to Distributor Required" [ref=e291] [cursor=pointer]':
+              - /url: /milestone/f5319896-0685-47d4-b4ea-c020b2053ba0
+              - generic [ref=e292]:
+                - generic [ref=e294]:
+                  - img [ref=e295]
+                  - generic [ref=e298]:
+                    - generic [ref=e299]: Upload to Distributor
+                    - generic [ref=e300]: "Due: May 15, 2026"
+                - generic [ref=e304]:
+                  - generic: Upload to Distributor
+                  - generic [ref=e305]: Required
+            - 'link "Spotify Playlist Submission Due: May 17, 2026 Spotify Playlist Submission Required" [ref=e306] [cursor=pointer]':
+              - /url: /milestone/de73f103-5fc1-4d7a-80a7-1ca307edd7cc
+              - generic [ref=e307]:
+                - generic [ref=e309]:
+                  - img [ref=e310]
+                  - generic [ref=e312]:
+                    - generic [ref=e313]: Spotify Playlist Submission
+                    - generic [ref=e314]: "Due: May 17, 2026"
+                - generic [ref=e318]:
+                  - generic: Spotify Playlist Submission
+                  - generic [ref=e319]: Required
+            - 'link "Teaser Content Released Due: May 21, 2026 Teaser Content Released" [ref=e320] [cursor=pointer]':
+              - /url: /milestone/8451844b-163d-4157-bdec-d37a5d888d7f
+              - generic [ref=e321]:
+                - generic [ref=e323]:
+                  - img [ref=e324]
+                  - generic [ref=e326]:
+                    - generic [ref=e327]: Teaser Content Released
+                    - generic [ref=e328]: "Due: May 21, 2026"
+                - generic [ref=e332]:
+                  - generic: Teaser Content Released
+            - 'link "Marketing Campaign Launch Due: May 24, 2026 Marketing Campaign Launch 0%" [ref=e333] [cursor=pointer]':
+              - /url: /milestone/53f14235-4ae0-4db5-980b-4c66e9bef746
+              - generic [ref=e334]:
+                - generic [ref=e336]:
+                  - img [ref=e337]
+                  - generic [ref=e340]:
+                    - generic [ref=e341]: Marketing Campaign Launch
+                    - generic [ref=e342]: "Due: May 24, 2026"
+                - generic [ref=e345]:
+                  - generic:
+                    - text: Marketing Campaign Launch
+                    - generic [ref=e346]: 0%
+            - 'link "Pre-Save Campaign Active Due: May 24, 2026 Pre-Save Campaign Active" [ref=e347] [cursor=pointer]':
+              - /url: /milestone/9d7744bb-f2fd-4964-92a0-56564fb7ea75
+              - generic [ref=e348]:
+                - generic [ref=e350]:
+                  - img [ref=e351]
+                  - generic [ref=e353]:
+                    - generic [ref=e354]: Pre-Save Campaign Active
+                    - generic [ref=e355]: "Due: May 24, 2026"
+                - generic [ref=e360]: Pre-Save Campaign Active
+            - 'link "Release Day Due: Jun 14, 2026 Release Day Required" [ref=e361] [cursor=pointer]':
+              - /url: /milestone/0550085f-60fb-4c94-8f51-3467d56aeb7e
+              - generic [ref=e362]:
+                - generic [ref=e364]:
+                  - img [ref=e365]
+                  - generic [ref=e367]:
+                    - generic [ref=e368]: Release Day
+                    - generic [ref=e369]: "Due: Jun 14, 2026"
+                - generic [ref=e372]:
+                  - generic: Release Day
+                  - generic [ref=e373]: Required
+          - generic [ref=e375]: Today
+        - generic [ref=e378]:
+          - generic [ref=e381]: Complete
+          - generic [ref=e384]: In Progress
+          - generic [ref=e387]: Overdue
+          - generic [ref=e390]: Pending
+      - generic [ref=e391]:
+        - alert [ref=e392]:
+          - img [ref=e393]
+          - generic [ref=e396]:
+            - generic [ref=e397]:
+              - strong [ref=e398]: "Timeline Risk: CRITICAL"
+              - paragraph [ref=e399]: 2 milestones past recommended deadline
+            - generic [ref=e400]:
+              - paragraph [ref=e401]: Release in
+              - paragraph [ref=e402]: 244 days
+        - generic [ref=e403]:
+          - generic [ref=e405]:
+            - generic [ref=e406]:
+              - generic [ref=e407]: Smart Deadlines
+              - generic [ref=e408]: Industry-standard recommendations vs. your actual deadlines
+            - img [ref=e409]
+          - generic [ref=e412]:
+            - generic [ref=e413]:
+              - generic [ref=e415]:
+                - generic [ref=e416]:
+                  - generic [ref=e417]:
+                    - heading "Recording Complete" [level=4] [ref=e418]
+                    - paragraph [ref=e419]: 90 day buffer recommended
+                  - generic [ref=e420]: TIGHT
+                - generic [ref=e421]:
+                  - generic [ref=e422]:
+                    - paragraph [ref=e423]: Your Deadline
+                    - paragraph [ref=e424]: Mar 16, 2026
+                  - generic [ref=e425]:
+                    - paragraph [ref=e426]: Recommended
+                    - paragraph [ref=e427]: Mar 16, 2026
+                - generic [ref=e431]:
+                  - img [ref=e432]
+                  - generic [ref=e435]: On track
+                - generic [ref=e436]: On track with 90 day industry-standard buffer.
+              - generic [ref=e438]:
+                - generic [ref=e439]:
+                  - generic [ref=e440]:
+                    - heading "Mixing Complete" [level=4] [ref=e441]
+                    - paragraph [ref=e442]: 60 day buffer recommended
+                  - generic [ref=e443]: TIGHT
+                - generic [ref=e444]:
+                  - generic [ref=e445]:
+                    - paragraph [ref=e446]: Your Deadline
+                    - paragraph [ref=e447]: Apr 15, 2026
+                  - generic [ref=e448]:
+                    - paragraph [ref=e449]: Recommended
+                    - paragraph [ref=e450]: Apr 15, 2026
+                - generic [ref=e454]:
+                  - img [ref=e455]
+                  - generic [ref=e458]: On track
+                - generic [ref=e459]: On track with 60 day industry-standard buffer.
+              - generic [ref=e461]:
+                - generic [ref=e462]:
+                  - generic [ref=e463]:
+                    - heading "Mastering Complete" [level=4] [ref=e464]
+                    - paragraph [ref=e465]: 45 day buffer recommended
+                  - generic [ref=e466]: TIGHT
+                - generic [ref=e467]:
+                  - generic [ref=e468]:
+                    - paragraph [ref=e469]: Your Deadline
+                    - paragraph [ref=e470]: Apr 30, 2026
+                  - generic [ref=e471]:
+                    - paragraph [ref=e472]: Recommended
+                    - paragraph [ref=e473]: Apr 30, 2026
+                - generic [ref=e477]:
+                  - img [ref=e478]
+                  - generic [ref=e481]: On track
+                - generic [ref=e482]: On track with 45 day industry-standard buffer.
+              - generic [ref=e483]:
+                - generic [ref=e484]: CRITICAL
+                - generic [ref=e485]:
+                  - generic [ref=e486]:
+                    - generic [ref=e487]:
+                      - heading "Metadata Tagging Complete" [level=4] [ref=e488]
+                      - paragraph [ref=e489]: 35 day buffer recommended
+                    - generic [ref=e490]: TIGHT
+                  - generic [ref=e491]:
+                    - generic [ref=e492]:
+                      - paragraph [ref=e493]: Your Deadline
+                      - paragraph [ref=e494]: May 10, 2026
+                    - generic [ref=e495]:
+                      - paragraph [ref=e496]: Recommended
+                      - paragraph [ref=e497]: May 10, 2026
+                  - generic [ref=e501]:
+                    - img [ref=e502]
+                    - generic [ref=e505]: On track
+                  - generic [ref=e506]: On track with 35 day industry-standard buffer.
+              - generic [ref=e508]:
+                - generic [ref=e509]:
+                  - generic [ref=e510]:
+                    - heading "Artwork Finalized" [level=4] [ref=e511]
+                    - paragraph [ref=e512]: 35 day buffer recommended
+                  - generic [ref=e513]: RISKY
+                - generic [ref=e514]:
+                  - generic [ref=e515]:
+                    - paragraph [ref=e516]: Your Deadline
+                    - paragraph [ref=e517]: May 15, 2026
+                  - generic [ref=e518]:
+                    - paragraph [ref=e519]: Recommended
+                    - paragraph [ref=e520]: May 10, 2026
+                - generic [ref=e524]:
+                  - img [ref=e525]
+                  - generic [ref=e527]: 5 days late
+                - generic [ref=e528]: ⚠️ 5 days late. Consider moving earlier to avoid delays.
+              - generic [ref=e529]:
+                - generic [ref=e530]: CRITICAL
+                - generic [ref=e531]:
+                  - generic [ref=e532]:
+                    - generic [ref=e533]:
+                      - heading "Upload to Distributor" [level=4] [ref=e534]
+                      - paragraph [ref=e535]: 30 day buffer recommended
+                    - generic [ref=e536]: TIGHT
+                  - generic [ref=e537]:
+                    - generic [ref=e538]:
+                      - paragraph [ref=e539]: Your Deadline
+                      - paragraph [ref=e540]: May 15, 2026
+                    - generic [ref=e541]:
+                      - paragraph [ref=e542]: Recommended
+                      - paragraph [ref=e543]: May 15, 2026
+                  - generic [ref=e547]:
+                    - img [ref=e548]
+                    - generic [ref=e551]: On track
+                  - generic [ref=e552]: On track with 30 day industry-standard buffer.
+              - generic [ref=e553]:
+                - generic [ref=e554]: CRITICAL
+                - generic [ref=e555]:
+                  - generic [ref=e556]:
+                    - generic [ref=e557]:
+                      - heading "Release Day" [level=4] [ref=e558]
+                      - paragraph [ref=e559]: 30 day buffer recommended
+                    - generic [ref=e560]: CRITICAL
+                  - generic [ref=e561]:
+                    - generic [ref=e562]:
+                      - paragraph [ref=e563]: Your Deadline
+                      - paragraph [ref=e564]: Jun 14, 2026
+                    - generic [ref=e565]:
+                      - paragraph [ref=e566]: Recommended
+                      - paragraph [ref=e567]: May 15, 2026
+                  - generic [ref=e571]:
+                    - img [ref=e572]
+                    - generic [ref=e574]: 30 days late
+                  - generic [ref=e575]: 🚨 30 days past recommended deadline. This is a critical milestone - immediate action required!
+              - generic [ref=e576]:
+                - generic [ref=e577]: CRITICAL
+                - generic [ref=e578]:
+                  - generic [ref=e579]:
+                    - generic [ref=e580]:
+                      - heading "Spotify Playlist Submission" [level=4] [ref=e581]
+                      - paragraph [ref=e582]: 28 day buffer recommended
+                    - generic [ref=e583]: TIGHT
+                  - generic [ref=e584]:
+                    - generic [ref=e585]:
+                      - paragraph [ref=e586]: Your Deadline
+                      - paragraph [ref=e587]: May 17, 2026
+                    - generic [ref=e588]:
+                      - paragraph [ref=e589]: Recommended
+                      - paragraph [ref=e590]: May 17, 2026
+                  - generic [ref=e594]:
+                    - img [ref=e595]
+                    - generic [ref=e598]: On track
+                  - generic [ref=e599]: On track with 28 day industry-standard buffer.
+              - generic [ref=e601]:
+                - generic [ref=e602]:
+                  - generic [ref=e603]:
+                    - heading "Teaser Content Released" [level=4] [ref=e604]
+                    - paragraph [ref=e605]: 21 day buffer recommended
+                  - generic [ref=e606]: TIGHT
+                - generic [ref=e607]:
+                  - generic [ref=e608]:
+                    - paragraph [ref=e609]: Your Deadline
+                    - paragraph [ref=e610]: May 21, 2026
+                  - generic [ref=e611]:
+                    - paragraph [ref=e612]: Recommended
+                    - paragraph [ref=e613]: May 24, 2026
+                - generic [ref=e617]:
+                  - img [ref=e618]
+                  - generic [ref=e621]: On track
+                - generic [ref=e622]: On track with 21 day industry-standard buffer.
+              - generic [ref=e624]:
+                - generic [ref=e625]:
+                  - generic [ref=e626]:
+                    - heading "Marketing Campaign Launch" [level=4] [ref=e627]
+                    - paragraph [ref=e628]: 14 day buffer recommended
+                  - generic [ref=e629]: SAFE
+                - generic [ref=e630]:
+                  - generic [ref=e631]:
+                    - paragraph [ref=e632]: Your Deadline
+                    - paragraph [ref=e633]: May 24, 2026
+                  - generic [ref=e634]:
+                    - paragraph [ref=e635]: Recommended
+                    - paragraph [ref=e636]: May 31, 2026
+                - generic [ref=e640]:
+                  - img [ref=e641]
+                  - generic [ref=e644]: On track
+                - generic [ref=e645]: Excellent! 7 days of extra buffer time.
+              - generic [ref=e647]:
+                - generic [ref=e648]:
+                  - generic [ref=e649]:
+                    - heading "Pre-Save Campaign Active" [level=4] [ref=e650]
+                    - paragraph [ref=e651]: 14 day buffer recommended
+                  - generic [ref=e652]: SAFE
+                - generic [ref=e653]:
+                  - generic [ref=e654]:
+                    - paragraph [ref=e655]: Your Deadline
+                    - paragraph [ref=e656]: May 24, 2026
+                  - generic [ref=e657]:
+                    - paragraph [ref=e658]: Recommended
+                    - paragraph [ref=e659]: May 31, 2026
+                - generic [ref=e663]:
+                  - img [ref=e664]
+                  - generic [ref=e667]: On track
+                - generic [ref=e668]: Excellent! 7 days of extra buffer time.
+            - generic [ref=e669]:
+              - paragraph [ref=e670]: "Timeline Risk Levels:"
+              - generic [ref=e671]:
+                - generic [ref=e674]: Safe (7+ days early)
+                - generic [ref=e677]: Tight (On time)
+                - generic [ref=e680]: Risky (Up to 7 days late)
+                - generic [ref=e683]: Critical (7+ days late)
+```

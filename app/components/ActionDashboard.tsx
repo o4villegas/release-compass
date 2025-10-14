@@ -4,7 +4,7 @@ import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Alert } from '~/components/ui/alert';
 import { Link } from 'react-router';
-import { AlertTriangle, Clock, X } from 'lucide-react';
+import { AlertTriangle, Clock, X, AlertCircle, CheckCircle, Circle } from 'lucide-react';
 
 interface ActionItem {
   id: string;
@@ -120,10 +120,10 @@ export function ActionDashboard({ projectId, sticky = false }: ActionDashboardPr
 
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
-      case 'high': return '🔴';
-      case 'medium': return '🟡';
-      case 'low': return '🟢';
-      default: return '⚪';
+      case 'high': return <AlertCircle className="h-5 w-5 text-red-500" />;
+      case 'medium': return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+      case 'low': return <CheckCircle className="h-5 w-5 text-primary" />;
+      default: return <Circle className="h-5 w-5 text-muted-foreground" />;
     }
   };
 
@@ -150,7 +150,7 @@ export function ActionDashboard({ projectId, sticky = false }: ActionDashboardPr
       <div className="sticky top-0 z-50 bg-destructive/10 border-b border-destructive/20 px-6 py-3">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🔴</span>
+            <AlertCircle className="h-6 w-6 text-red-500" />
             <span className="font-semibold">
               {visibleActions.length} action{visibleActions.length !== 1 ? 's' : ''} required
             </span>
@@ -256,7 +256,7 @@ export function ActionDashboard({ projectId, sticky = false }: ActionDashboardPr
                       action.severity === 'medium' ? 'bg-yellow-500/20 border-2 border-yellow-500/50 shadow-yellow-500/20' :
                       'bg-primary/20 border-2 border-primary/50 shadow-primary/20'}
                   `}>
-                    <span className="text-xl">{getSeverityIcon(action.severity)}</span>
+                    {getSeverityIcon(action.severity)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <CardTitle className="text-base font-semibold leading-tight mb-1.5 text-foreground">

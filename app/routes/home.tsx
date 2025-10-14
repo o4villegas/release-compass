@@ -90,14 +90,19 @@ export default function Home() {
         </div>
 
         <div className="mt-8 text-center">
-          <Card className="border-border bg-card/50">
-            <CardContent className="pt-6">
-              <p className="text-sm text-muted-foreground mb-3">Demo Project</p>
+          <Card className="border-primary/50 bg-card shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-lg">Quick Start: Demo Project</CardTitle>
+              <CardDescription>
+                Implementation Test - Test Album with sample content and milestones
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
               {/* Official demo project ID: b434c7af-5501-4ef7-a640-9cb19b2fe28d */}
               {/* This project is seeded by scripts/enhance-demo-project.sql */}
               <Link to="/project/b434c7af-5501-4ef7-a640-9cb19b2fe28d">
-                <Button variant="outline" size="sm" className="w-full">
-                  View Demo Project
+                <Button size="lg" className="w-full">
+                  Open Demo Project →
                 </Button>
               </Link>
             </CardContent>

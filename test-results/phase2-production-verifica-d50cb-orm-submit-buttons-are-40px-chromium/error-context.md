@@ -1,0 +1,105 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - link "Release Compass" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Release Compass" [ref=e6]
+      - button [ref=e7]:
+        - img
+    - navigation [ref=e8]:
+      - link "Dashboard" [ref=e9] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d
+        - img [ref=e10]
+        - generic [ref=e15]: Dashboard
+      - link "Content Library" [ref=e16] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/content
+        - img [ref=e17]
+        - generic [ref=e19]: Content Library
+      - link "Calendar" [ref=e20] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/calendar
+        - img [ref=e21]
+        - generic [ref=e23]: Calendar
+      - link "Budget" [ref=e24] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/budget
+        - img [ref=e25]
+        - generic [ref=e27]: Budget
+      - link "Master Upload" [ref=e28] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/master
+        - img [ref=e29]
+        - generic [ref=e32]: Master Upload
+      - link "Production Files" [ref=e33] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/files
+        - img [ref=e34]
+        - generic [ref=e38]: Production Files
+      - link "Teasers" [ref=e39] [cursor=pointer]:
+        - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d/teasers
+        - img [ref=e40]
+        - generic [ref=e43]: Teasers
+    - link "All Projects" [ref=e45] [cursor=pointer]:
+      - /url: /projects
+      - img [ref=e46]
+      - generic [ref=e51]: All Projects
+  - main [ref=e52]:
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - link "Back to Project" [ref=e56] [cursor=pointer]:
+          - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d
+          - img
+          - text: Back to Project
+        - heading "Production Files" [level=1] [ref=e57]
+        - paragraph [ref=e58]: Implementation Test - Test Album
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - generic [ref=e61]: Upload File
+          - generic [ref=e62]: Upload master audio, stems, contracts, and receipts. Album artwork is uploaded during project creation.
+        - generic [ref=e64]:
+          - generic [ref=e65]:
+            - generic [ref=e66]:
+              - text: File Type *
+              - combobox "File Type *" [ref=e67]:
+                - generic: Master Audio (100MB max)
+                - img [ref=e68]
+              - combobox [ref=e70]
+            - generic [ref=e71]:
+              - text: File *
+              - button "File *" [ref=e72]
+          - button "Upload File" [disabled]
+      - generic [ref=e73]:
+        - heading "Master Audio Files" [level=2] [ref=e74]
+        - generic [ref=e75]:
+          - generic [ref=e79] [cursor=pointer]:
+            - generic [ref=e80]:
+              - generic [ref=e81]: master-final-v2.wav
+              - generic [ref=e82]: Uploaded 5/2/2026
+            - generic [ref=e83]:
+              - img [ref=e84]
+              - text: Acknowledged
+          - generic [ref=e88]:
+            - img [ref=e92]
+            - heading "No File Selected" [level=3] [ref=e97]
+            - paragraph [ref=e98]: Click on a master audio file to preview it with the audio player.
+      - generic [ref=e99]:
+        - heading "Stems" [level=2] [ref=e100]
+        - generic [ref=e101]:
+          - generic [ref=e106] [cursor=pointer]:
+            - generic [ref=e107]: stems-pack.zip
+            - generic [ref=e108]: Uploaded 5/2/2026
+          - generic [ref=e110]:
+            - img [ref=e114]
+            - heading "No File Selected" [level=3] [ref=e119]
+            - paragraph [ref=e120]: Click on a stem file to preview it with the audio player.
+      - generic [ref=e121]:
+        - heading "Other Files" [level=2] [ref=e122]
+        - generic [ref=e123]:
+          - generic [ref=e126]:
+            - text: album-artwork-final.png
+            - text: Uploaded 5/15/2026
+          - generic [ref=e128]:
+            - generic [ref=e129]: Contracts
+            - generic [ref=e130]:
+              - text: recording-contract-signed.pdf
+              - text: Uploaded 2/28/2026
+```

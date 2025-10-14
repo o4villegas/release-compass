@@ -1,0 +1,102 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - link "Release Compass" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Release Compass" [ref=e7]
+        - link "Projects" [ref=e8] [cursor=pointer]:
+          - /url: /projects
+      - navigation "breadcrumb" [ref=e10]:
+        - list [ref=e11]:
+          - listitem [ref=e13]:
+            - link "Home" [ref=e14] [cursor=pointer]:
+              - /url: /
+          - generic [ref=e15]:
+            - listitem [ref=e16]:
+              - img [ref=e17]
+            - listitem [ref=e19]:
+              - link "Project" [ref=e20] [cursor=pointer]:
+                - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b
+          - generic [ref=e21]:
+            - listitem [ref=e22]:
+              - img [ref=e23]
+            - listitem [ref=e25]:
+              - link "Teasers" [disabled] [ref=e26]
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - link "Back to Project" [ref=e30] [cursor=pointer]:
+        - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b
+        - img
+        - text: Back to Project
+      - generic [ref=e31]:
+        - heading "Fix Test" [level=1] [ref=e32]
+        - paragraph [ref=e33]: Teaser Content Tracker
+      - generic [ref=e34]:
+        - generic [ref=e35]:
+          - generic [ref=e37]: Teaser Requirement
+          - generic [ref=e38]:
+            - generic [ref=e39]: 0 / 2
+            - paragraph [ref=e40]:
+              - generic [ref=e41]: 2 more needed
+            - progressbar [ref=e42]
+        - generic [ref=e44]:
+          - generic [ref=e46]: Optimal Posting Window
+          - generic [ref=e47]:
+            - generic [ref=e48]: Jul 3, 2026 - Jul 10, 2026
+            - paragraph [ref=e49]: 21-28 days before release
+            - generic [ref=e50]: Outside optimal window
+        - generic [ref=e51]:
+          - generic [ref=e53]: Platforms Used
+          - generic [ref=e55]:
+            - generic [ref=e56]: TikTok
+            - generic [ref=e57]: Instagram
+            - generic [ref=e58]: YouTube
+            - generic [ref=e59]: Twitter
+            - generic [ref=e60]: Facebook
+      - generic [ref=e61]:
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - generic [ref=e64]: Add Teaser Post
+            - generic [ref=e65]: Record a new teaser post across social platforms
+          - generic [ref=e67]:
+            - generic [ref=e68]:
+              - text: Platform
+              - combobox [ref=e69]:
+                - generic: TikTok
+                - img [ref=e70]
+              - combobox [ref=e72]
+            - generic [ref=e73]:
+              - text: Post URL
+              - textbox "Post URL" [ref=e74]:
+                - /placeholder: https://...
+            - generic [ref=e75]:
+              - generic [ref=e76]:
+                - text: Snippet Duration (seconds)
+                - spinbutton "Snippet Duration (seconds)" [ref=e77]: "15"
+                - paragraph [ref=e78]: 5-60 seconds
+              - generic [ref=e79]:
+                - text: Song Section
+                - combobox [ref=e80]:
+                  - generic: Chorus
+                  - img [ref=e81]
+                - combobox [ref=e83]
+            - generic [ref=e84]:
+              - checkbox "Pre-save link included in post" [ref=e85]
+              - checkbox
+              - generic [ref=e86] [cursor=pointer]: Pre-save link included in post
+            - button "Add Teaser Post" [ref=e87]
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: Posted Teasers
+            - generic [ref=e91]: 0 teasers posted
+          - generic [ref=e94]:
+            - img [ref=e96]
+            - heading "No Teasers Posted" [level=3] [ref=e99]
+            - paragraph [ref=e100]: Start building anticipation by posting teaser clips on social media. Teasers help engage your audience before the release.
+            - link "Add First Teaser" [ref=e101] [cursor=pointer]:
+              - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b/teasers#add-teaser-form
+```

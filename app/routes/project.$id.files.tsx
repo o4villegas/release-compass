@@ -211,7 +211,7 @@ export default function ProjectFiles() {
 
             {uploading && (
               <div className="space-y-2">
-                <Progress value={uploadProgress} />
+                <Progress value={uploadProgress} className="glow-sm animate-pulse" />
                 <p className="text-sm text-center text-muted-foreground">Uploading... {uploadProgress}%</p>
               </div>
             )}
@@ -220,7 +220,7 @@ export default function ProjectFiles() {
               <Alert className="border-destructive text-destructive">{error}</Alert>
             )}
 
-            <Button type="submit" size="lg" disabled={!file || uploading} className="w-full">
+            <Button type="submit" size="lg" disabled={!file || uploading} className="w-full glow-hover-md">
               {uploading ? 'Uploading...' : 'Upload File'}
             </Button>
           </form>
@@ -233,12 +233,12 @@ export default function ProjectFiles() {
           <h2 className="text-2xl font-bold">Master Audio Files</h2>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
             {/* Left: File List */}
-            <div className="space-y-4">
+            <div className="space-y-4 animate-slide-in-left stagger-children">
               {masterFiles.map((fileItem) => (
                 <Card
                   key={fileItem.id}
                   onClick={() => loadFileDetails(fileItem.id)}
-                  className={`cursor-pointer transition-all ${selectedFileId === fileItem.id ? 'ring-2 ring-primary' : ''}`}
+                  className={`cursor-pointer transition-all duration-300 ${selectedFileId === fileItem.id ? 'border-primary glow-lg' : ''}`}
                   elevation="raised"
                   glow={selectedFileId === fileItem.id ? "primary" : "none"}
                 >
@@ -264,7 +264,7 @@ export default function ProjectFiles() {
             </div>
 
             {/* Right: Sticky Sidebar Preview */}
-            <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+            <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)] animate-slide-in-right">
               {selectedFileId && fileDetails ? (
                 <Card elevation="floating" glow="primary">
                   <CardContent className="pt-6">
@@ -296,12 +296,12 @@ export default function ProjectFiles() {
           <h2 className="text-2xl font-bold">Stems</h2>
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
             {/* Left: File List */}
-            <div className="space-y-4">
+            <div className="space-y-4 animate-slide-in-left stagger-children">
               {stemFiles.map((fileItem) => (
                 <Card
                   key={fileItem.id}
                   onClick={() => loadFileDetails(fileItem.id)}
-                  className={`cursor-pointer transition-all ${selectedFileId === fileItem.id ? 'ring-2 ring-primary' : ''}`}
+                  className={`cursor-pointer transition-all duration-300 ${selectedFileId === fileItem.id ? 'border-primary glow-lg' : ''}`}
                   elevation="raised"
                   glow={selectedFileId === fileItem.id ? "primary" : "none"}
                 >
@@ -327,7 +327,7 @@ export default function ProjectFiles() {
             </div>
 
             {/* Right: Sticky Sidebar Preview */}
-            <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)]">
+            <div className="lg:sticky lg:top-8 lg:h-[calc(100vh-4rem)] animate-slide-in-right">
               {selectedFileId && fileDetails ? (
                 <Card elevation="floating" glow="primary">
                   <CardContent className="pt-6">

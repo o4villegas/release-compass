@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - img "Release Compass" [ref=e6]
+    - paragraph [ref=e7]: Music release management built for label-funded artists
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - generic [ref=e11]: View Projects
+        - generic [ref=e12]: View and manage all your music release projects
+      - link "All Projects" [ref=e14] [cursor=pointer]:
+        - /url: /projects
+        - button "All Projects" [ref=e15]
+    - generic [ref=e16]:
+      - generic [ref=e17]:
+        - generic [ref=e18]: Create New Project
+        - generic [ref=e19]: Start a new music release with automated milestone generation
+      - link "New Release Project" [ref=e21] [cursor=pointer]:
+        - /url: /create-project
+        - button "New Release Project" [ref=e22]
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]: Features
+        - generic [ref=e26]: What makes Release Compass different
+      - generic [ref=e27]:
+        - generic [ref=e28]:
+          - img [ref=e29]
+          - generic [ref=e32]: Enforces content capture before milestone completion
+        - generic [ref=e33]:
+          - img [ref=e34]
+          - generic [ref=e37]: Auto-generates timeline from release date
+        - generic [ref=e38]:
+          - img [ref=e39]
+          - generic [ref=e42]: Tracks budget with category allocations
+        - generic [ref=e43]:
+          - img [ref=e44]
+          - generic [ref=e47]: Validates release readiness with checklist
+  - generic [ref=e49]:
+    - generic [ref=e50]:
+      - generic [ref=e51]: "Quick Start: Demo Project"
+      - generic [ref=e52]: Implementation Test - Test Album with sample content and milestones
+    - link "Open Demo Project →" [ref=e54] [cursor=pointer]:
+      - /url: /project/b434c7af-5501-4ef7-a640-9cb19b2fe28d
+      - button "Open Demo Project →" [ref=e55]
+  - paragraph [ref=e57]: Built for artists, managers, and labels
+```

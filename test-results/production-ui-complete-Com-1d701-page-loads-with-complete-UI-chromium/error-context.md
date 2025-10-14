@@ -1,0 +1,91 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - banner [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - link "Release Compass" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - img "Release Compass" [ref=e7]
+        - link "Projects" [ref=e8] [cursor=pointer]:
+          - /url: /projects
+      - navigation "breadcrumb" [ref=e10]:
+        - list [ref=e11]:
+          - listitem [ref=e13]:
+            - link "Home" [ref=e14] [cursor=pointer]:
+              - /url: /
+          - generic [ref=e15]:
+            - listitem [ref=e16]:
+              - img [ref=e17]
+            - listitem [ref=e19]:
+              - link "Project" [ref=e20] [cursor=pointer]:
+                - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b
+          - generic [ref=e21]:
+            - listitem [ref=e22]:
+              - img [ref=e23]
+            - listitem [ref=e25]:
+              - link "Master Upload" [disabled] [ref=e26]
+  - main [ref=e27]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - link "Back to Project" [ref=e30] [cursor=pointer]:
+          - /url: /project/591d7f6f-cfe4-447f-9e3d-77ca71ef634b
+          - img
+          - text: Back to Project
+        - heading "Master & Artwork Upload" [level=1] [ref=e31]
+        - paragraph [ref=e32]: Production Test - Fix Test
+      - alert [ref=e33]:
+        - generic [ref=e34]:
+          - paragraph [ref=e35]: "Upload Requirements:"
+          - list [ref=e36]:
+            - listitem [ref=e37]: "Master audio: WAV or FLAC format, maximum 100MB"
+            - listitem [ref=e38]: "Artwork: Minimum 3000x3000px, 1:1 aspect ratio (square), maximum 25MB"
+            - listitem [ref=e39]: "Metadata: ISRC code, genre, and explicit content flag required"
+      - generic [ref=e40]:
+        - generic [ref=e41]:
+          - generic [ref=e42]:
+            - generic [ref=e43]:
+              - generic [ref=e44]: "1"
+              - text: Master Audio
+            - generic [ref=e45]: Upload your final mixed and mastered audio file
+          - generic [ref=e46]:
+            - generic [ref=e47]:
+              - text: Audio File *
+              - button "Audio File *" [ref=e48]
+            - button "Upload Master" [disabled]
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]:
+              - generic [ref=e52]: "2"
+              - text: Artwork
+            - generic [ref=e53]: Upload your album/single artwork (3000x3000px minimum)
+          - generic [ref=e54]:
+            - generic [ref=e55]:
+              - text: Artwork File *
+              - button "Artwork File *" [ref=e56]
+            - button "Upload Artwork" [disabled]
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - generic [ref=e60]: "3"
+              - text: Metadata
+            - generic [ref=e61]: Provide required metadata for distribution
+          - generic [ref=e63]:
+            - generic [ref=e64]:
+              - text: ISRC Code *
+              - textbox "ISRC Code *" [disabled] [ref=e65]:
+                - /placeholder: US-S1Z-99-00001
+              - paragraph [ref=e66]: "Format: CC-XXX-YY-NNNNN"
+            - generic [ref=e67]:
+              - text: Genre *
+              - combobox "Genre *" [disabled] [ref=e68]:
+                - generic: Select genre
+                - img [ref=e69]
+              - combobox [disabled] [ref=e71]
+            - generic [ref=e72]:
+              - checkbox "Contains explicit content" [disabled] [ref=e73]
+              - checkbox [disabled]
+              - generic [ref=e74]: Contains explicit content
+            - button "Complete Master Upload" [disabled]
+```
