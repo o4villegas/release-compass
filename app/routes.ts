@@ -14,7 +14,6 @@ export default [
     route("project/:id/files", "routes/project.$id.files.tsx"),
     route("project/:id/master", "routes/project.$id.master.tsx"),
     route("project/:id/social", "routes/project.$id.social.tsx"),
-    route("project/:id/timeline", "routes/project.$id.timeline.tsx"),
     route("milestone/:id", "routes/milestone.$id.tsx"),
   ]),
 

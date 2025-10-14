@@ -80,12 +80,6 @@ export function StudioSidebar({ collapsed, onToggle }: StudioSidebarProps) {
       path: `/project/${projectId}/social`,
       activePattern: new RegExp(`/project/${projectId}/social`)
     },
-    {
-      label: 'Timeline',
-      icon: GanttChart,
-      path: `/project/${projectId}/timeline`,
-      activePattern: new RegExp(`/project/${projectId}/timeline`)
-    },
   ] : [
     {
       label: 'Projects',

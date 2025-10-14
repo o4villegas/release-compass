@@ -141,12 +141,6 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
                   Master
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
-                <Link to={`/project/${project.id}/timeline`} className="flex items-center gap-2">
-                  <GanttChart className="h-4 w-4" />
-                  Timeline
-                </Link>
-              </Button>
             </div>
           </div>
         </div>
