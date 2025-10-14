@@ -22,5 +22,4 @@ export default [
   route("test-direct-db", "routes/test-direct-db.tsx"),
   route("test-import-handler", "routes/test-import-handler.tsx"),
   route("test-error-handling", "routes/test-error-handling.tsx"),
-  route("test-use-state-ssr", "routes/test-use-state-ssr.tsx"),
 ] satisfies RouteConfig;
