@@ -15,7 +15,7 @@ import {
   GanttFeatureRow,
   GanttToday,
   type GanttFeature,
-} from "~/components/ui/gantt";
+} from "~/components/ui/gantt/index.client";
 import { useState } from "react";
 
 // Milestone data type from API

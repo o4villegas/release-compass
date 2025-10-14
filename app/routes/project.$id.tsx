@@ -1,6 +1,6 @@
 import type { Route } from "./+types/project.$id";
 import { Link, useNavigation } from "react-router";
-import { FileText, DollarSign, FolderOpen, Calendar as CalendarIcon, Video, Music, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { FileText, DollarSign, FolderOpen, Calendar as CalendarIcon, Share2, Music, GanttChart, CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -130,15 +130,21 @@ export default function ProjectDashboard({ loaderData }: Route.ComponentProps) {
                 </Link>
               </Button>
               <Button asChild variant="outline" size="sm" className="glow-hover-sm">
-                <Link to={`/project/${project.id}/teasers`} className="flex items-center gap-2">
-                  <Video className="h-4 w-4" />
-                  Teasers
+                <Link to={`/project/${project.id}/social`} className="flex items-center gap-2">
+                  <Share2 className="h-4 w-4" />
+                  Social
                 </Link>
               </Button>
               <Button asChild variant="outline" size="sm" className="glow-hover-sm">
                 <Link to={`/project/${project.id}/master`} className="flex items-center gap-2">
                   <Music className="h-4 w-4" />
                   Master
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm" className="glow-hover-sm">
+                <Link to={`/project/${project.id}/timeline`} className="flex items-center gap-2">
+                  <GanttChart className="h-4 w-4" />
+                  Timeline
                 </Link>
               </Button>
             </div>

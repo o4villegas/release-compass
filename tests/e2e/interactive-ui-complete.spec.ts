@@ -153,7 +153,7 @@ test.describe('Interactive UI Complete Workflow', () => {
     await expect(page.getByRole('link', { name: 'Master Upload' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Production Files' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Budget' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Teasers' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Social' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Content Library' })).toBeVisible();
     console.log('✅ All 5 navigation buttons present');
 
@@ -295,12 +295,12 @@ test.describe('Interactive UI Complete Workflow', () => {
     // ============================================
     console.log('\n📍 STEP 8: Testing Teasers Page with EmptyState');
 
-    await page.goto(`${PRODUCTION_URL}/project/${projectId}/teasers`);
+    await page.goto(`${PRODUCTION_URL}/project/${projectId}/social`);
     await page.waitForLoadState('networkidle');
 
     const teasersH1 = await page.locator('h1').textContent();
     if (teasersH1 && !teasersH1.includes('Oops')) {
-      await expect(page.getByText('Teaser Content Tracker')).toBeVisible();
+      await expect(page.getByText('Social Media Strategy')).toBeVisible();
       console.log('✅ Teasers page loaded');
 
       const teasersEmptyState = page.getByText('No Teasers Posted');

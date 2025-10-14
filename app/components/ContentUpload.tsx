@@ -6,10 +6,13 @@ import { Label } from '~/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select';
 import { Alert } from '~/components/ui/alert';
 import { Progress } from '~/components/ui/progress';
+import { Dropzone, DropzoneContent, DropzoneEmptyState } from '~/components/ui/dropzone';
 import {
   validateFileSize,
   formatFileSize,
   getAcceptedFileTypes,
+  getAcceptTypeForDropzone,
+  FILE_SIZE_LIMITS,
   CONTENT_TYPES,
   CAPTURE_CONTEXTS,
   type ContentType,
@@ -35,15 +38,15 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete, prefil
   const [uploadProgress, setUploadProgress] = useState(0);
   const [validationError, setValidationError] = useState('');
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
+  const handleDrop = (acceptedFiles: File[]) => {
+    const selectedFile = acceptedFiles[0];
     if (!selectedFile) {
       setFile(null);
       setValidationError('');
       return;
     }
 
-    // Validate file size
+    // Validate file size (Dropzone maxSize handles basic validation, but we provide detailed messaging)
     const validation = validateFileSize(selectedFile, contentType);
     if (!validation.valid) {
       setValidationError(validation.error || 'File validation failed');
@@ -53,6 +56,11 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete, prefil
 
     setValidationError('');
     setFile(selectedFile);
+  };
+
+  const handleDropError = (error: Error) => {
+    setValidationError(error.message || 'File validation failed');
+    setFile(null);
   };
 
   const handleContentTypeChange = (value: string) => {
@@ -206,23 +214,22 @@ export function ContentUpload({ projectId, milestoneId, onUploadComplete, prefil
             </div>
           </div>
 
-          {/* Row 2: File Input (full width) */}
+          {/* Row 2: File Dropzone (full width) */}
           <div className="space-y-2">
             <Label htmlFor="file">File *</Label>
-            <Input
-              id="file"
-              type="file"
-              onChange={handleFileChange}
-              accept={getAcceptedFileTypes(contentType)}
+            <Dropzone
+              onDrop={handleDrop}
+              onError={handleDropError}
+              maxSize={FILE_SIZE_LIMITS[contentType] * 1024 * 1024} // Convert MB to bytes
+              accept={getAcceptTypeForDropzone(contentType)}
               disabled={uploading}
-            />
-            {file && (
-              <p className="text-sm text-muted-foreground">
-                Selected: {file.name} ({formatFileSize(file.size)})
-              </p>
-            )}
+              src={file ? [file] : undefined}
+            >
+              <DropzoneEmptyState />
+              <DropzoneContent />
+            </Dropzone>
             {validationError && (
-              <Alert className="border-destructive text-destructive">
+              <Alert className="border-destructive text-destructive mt-2">
                 {validationError}
               </Alert>
             )}

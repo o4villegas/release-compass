@@ -46,7 +46,7 @@ export function TeaserRequirementModal({ open, onClose, required, actual, missin
             Cancel
           </Button>
           <Button asChild>
-            <Link to={`/project/${projectId}/teasers`}>
+            <Link to={`/project/${projectId}/social`}>
               Create Teasers
             </Link>
           </Button>

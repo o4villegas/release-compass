@@ -44,10 +44,10 @@ test.describe('Phase 2: Production Verification', () => {
     console.log(`✅ Files submit button: ${filesHeight}`);
 
     // Test 2: Teasers form
-    await page.goto(`/project/${projectId}/teasers`);
+    await page.goto(`/project/${projectId}/social`);
     await page.waitForSelector('h1:has-text("Test Album")');
 
-    const teasersButton = page.locator('button[type="submit"]:has-text("Post Teaser")');
+    const teasersButton = page.locator('button[type="submit"]:has-text("Add Teaser Post")');
     const teasersHeight = await teasersButton.evaluate((el) => {
       return window.getComputedStyle(el).height;
     });

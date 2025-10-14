@@ -110,7 +110,7 @@ test.describe('Phase 2: Production Verification (Simplified)', () => {
       { url: `/project/${projectId}/budget`, name: 'Budget' },
       { url: `/project/${projectId}/files`, name: 'Files' },
       { url: `/project/${projectId}/calendar`, name: 'Calendar' },
-      { url: `/project/${projectId}/teasers`, name: 'Teasers' },
+      { url: `/project/${projectId}/social`, name: 'Social' },
       { url: `/project/${projectId}/master`, name: 'Master' },
     ];
 

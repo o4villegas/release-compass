@@ -1,4 +1,4 @@
-import type { Route } from "./+types/project.$id.teasers";
+import type { Route } from "./+types/project.$id.social";
 import type { D1Database, R2Bucket } from '@cloudflare/workers-types';
 import { useLoaderData, Link, useRevalidator } from 'react-router';
 import { useState } from 'react';
@@ -81,7 +81,7 @@ export async function loader({ params, context }: Route.LoaderArgs) {
   };
 }
 
-export default function ProjectTeasers() {
+export default function ProjectSocial() {
   const { project, teasers, requirement, optimalWindow } = useLoaderData<typeof loader>();
   const revalidator = useRevalidator();
 
@@ -236,7 +236,7 @@ export default function ProjectTeasers() {
 
       <div className="mb-6">
         <h1 className="text-4xl font-bold">{project.release_title}</h1>
-        <p className="text-muted-foreground">Teaser Content Tracker</p>
+        <p className="text-muted-foreground">Social Media Strategy</p>
       </div>
 
       {/* Teaser Requirements Overview */}

@@ -3,6 +3,7 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { visualizer } from "rollup-plugin-visualizer";
 
 export default defineConfig({
   plugins: [
@@ -10,5 +11,11 @@ export default defineConfig({
     tailwindcss(),
     reactRouter(),
     tsconfigPaths(),
+    visualizer({
+      filename: './bundle-analysis.html',
+      open: false,
+      gzipSize: true,
+      brotliSize: true,
+    }),
   ],
 });

@@ -177,6 +177,7 @@ release-compass/
    - Access Cloudflare bindings via `c.env` (D1, R2, secrets)
    - All API routes are under `/api/*` prefix
    - React Router catch-all uses `app.notFound()` handler (must be registered last)
+   - **Note**: The "Social" feature (route `/project/:id/social`) uses internal naming "teasers" in API/database for backward compatibility (teaser_posts table, /api/teasers endpoints)
 
 3. **Database (D1)**
    - SQLite database accessed via D1 binding

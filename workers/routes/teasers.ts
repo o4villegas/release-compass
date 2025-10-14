@@ -1,3 +1,11 @@
+/**
+ * Teaser Posts API Routes
+ *
+ * NOTE: UI refers to this feature as "Social" (route: /project/:id/social)
+ * but internal implementation uses "teasers" for historical reasons.
+ * API endpoints at /api/teasers remain unchanged for backward compatibility.
+ * Database table: teaser_posts
+ */
 import { Hono } from 'hono';
 
 type Bindings = {

@@ -79,7 +79,7 @@ test.describe('Comprehensive UI/UX Verification', () => {
     await expect(page.getByRole('link', { name: 'Master Upload' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Production Files' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Budget' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Teasers' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Social' })).toBeVisible();
     await expect(page.getByRole('link', { name: 'Content Library' })).toBeVisible();
   });
 
@@ -115,12 +115,12 @@ test.describe('Comprehensive UI/UX Verification', () => {
   });
 
   test('Teasers page shows enhanced empty state when no teasers', async ({ page }) => {
-    await page.goto(`${PRODUCTION_URL}/project/${DEMO_PROJECT_ID}/teasers`);
+    await page.goto(`${PRODUCTION_URL}/project/${DEMO_PROJECT_ID}/social`);
 
     await page.waitForLoadState('networkidle');
 
     // Verify page loads
-    await expect(page.getByText('Teaser Content Tracker')).toBeVisible();
+    await expect(page.getByText('Social Media Strategy')).toBeVisible();
   });
 
   test('Milestone page loads with quota status display', async ({ page }) => {

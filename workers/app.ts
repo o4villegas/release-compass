@@ -5,7 +5,7 @@ import contentRoutes from "./routes/content";
 import milestonesRoutes from "./routes/milestones";
 import filesRoutes from "./routes/files";
 import budgetRoutes from "./routes/budget";
-import teasersRoutes from "./routes/teasers";
+import teasersRoutes from "./routes/teasers"; // UI: "Social" feature
 import actionsRoutes from "./routes/actions";
 import calendarRoutes from "./routes/calendar";
 

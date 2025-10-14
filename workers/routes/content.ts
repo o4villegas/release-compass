@@ -7,6 +7,7 @@ import {
   CAPTURE_CONTEXTS,
   type CaptureContext,
 } from '../utils/fileValidation';
+import { generateDownloadUrl } from '../utils/r2SignedUrls';
 
 type Bindings = {
   DB: D1Database;
@@ -199,8 +200,6 @@ app.get('/content/:contentId/url', async (c) => {
     }
 
     // Generate presigned URL using existing utility
-    const { generateDownloadUrl } = await import('../utils/r2SignedUrls');
-
     const url = await generateDownloadUrl(
       content.storage_key as string,
       'music-release-files', // Bucket name

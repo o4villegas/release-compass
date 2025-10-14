@@ -87,3 +87,34 @@ export function getAcceptedFileTypes(contentType: ContentType): string {
 
   return '*';
 }
+
+/**
+ * Get accepted file types for react-dropzone (object format)
+ */
+export function getAcceptTypeForDropzone(contentType: ContentType): Record<string, string[]> {
+  if (contentType === 'photo') {
+    return {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+      'image/webp': ['.webp']
+    };
+  }
+
+  if (contentType.includes('video') || contentType === 'live_performance' || contentType === 'team_meeting') {
+    return {
+      'video/mp4': ['.mp4'],
+      'video/quicktime': ['.mov'],
+      'video/webm': ['.webm']
+    };
+  }
+
+  if (contentType === 'voice_memo') {
+    return {
+      'audio/wav': ['.wav'],
+      'audio/mpeg': ['.mp3'],
+      'audio/mp4': ['.m4a']
+    };
+  }
+
+  return {};
+}

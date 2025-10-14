@@ -1,3 +1,10 @@
+/**
+ * Teaser Posts Business Logic
+ *
+ * NOTE: UI calls this feature "Social" but internal naming is "teasers" (historical).
+ * Database table: teaser_posts
+ * UI route: /project/:id/social
+ */
 import type { D1Database } from '@cloudflare/workers-types';
 
 export interface TeaserPost {

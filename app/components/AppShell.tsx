@@ -123,8 +123,8 @@ function generateBreadcrumbs(pathname: string): Breadcrumb[] {
       label = 'Production Files';
     } else if (segment === 'master') {
       label = 'Master Upload';
-    } else if (segment === 'teasers') {
-      label = 'Teasers';
+    } else if (segment === 'social') {
+      label = 'Social';
     } else {
       // Capitalize first letter
       label = segment.charAt(0).toUpperCase() + segment.slice(1);
