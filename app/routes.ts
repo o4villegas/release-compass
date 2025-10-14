@@ -13,7 +13,8 @@ export default [
     route("project/:id/content", "routes/project.$id.content.tsx"),
     route("project/:id/files", "routes/project.$id.files.tsx"),
     route("project/:id/master", "routes/project.$id.master.tsx"),
-    route("project/:id/teasers", "routes/project.$id.teasers.tsx"),
+    route("project/:id/social", "routes/project.$id.social.tsx"),
+    route("project/:id/timeline", "routes/project.$id.timeline.tsx"),
     route("milestone/:id", "routes/milestone.$id.tsx"),
   ]),
 
@@ -21,4 +22,5 @@ export default [
   route("test-direct-db", "routes/test-direct-db.tsx"),
   route("test-import-handler", "routes/test-import-handler.tsx"),
   route("test-error-handling", "routes/test-error-handling.tsx"),
+  route("test-use-state-ssr", "routes/test-use-state-ssr.tsx"),
 ] satisfies RouteConfig;
