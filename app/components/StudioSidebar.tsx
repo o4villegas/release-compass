@@ -5,11 +5,12 @@ import {
   FolderOpen,
   Calendar,
   DollarSign,
-  Megaphone,
+  Share2,
   Upload,
   ChevronLeft,
   ChevronRight,
-  Disc3
+  Disc3,
+  GanttChart
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { cn } from '~/lib/utils';
@@ -74,10 +75,16 @@ export function StudioSidebar({ collapsed, onToggle }: StudioSidebarProps) {
       activePattern: new RegExp(`/project/${projectId}/files`)
     },
     {
-      label: 'Teasers',
-      icon: Megaphone,
-      path: `/project/${projectId}/teasers`,
-      activePattern: new RegExp(`/project/${projectId}/teasers`)
+      label: 'Social',
+      icon: Share2,
+      path: `/project/${projectId}/social`,
+      activePattern: new RegExp(`/project/${projectId}/social`)
+    },
+    {
+      label: 'Timeline',
+      icon: GanttChart,
+      path: `/project/${projectId}/timeline`,
+      activePattern: new RegExp(`/project/${projectId}/timeline`)
     },
   ] : [
     {
